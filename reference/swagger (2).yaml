@@ -942,6 +942,44 @@ definitions:
     properties:
       value:
         type: string
+  RegistrationModel:
+    properties:
+      ca_cert:
+        type: string
+      ca_private_key:
+        type: string
+      cert:
+        type: string
+      kmip_start_sequence:
+        format: int64
+        type: integer
+      public_address:
+        type: string
+      server_cert:
+        type: string
+      server_cert_alias:
+        type: string
+      server_key:
+        type: string
+      timestamp:
+        format: date-time
+        type: string
+  RegistrationRequest:
+    properties:
+      address:
+        type: string
+      csr:
+        type: string
+      lock_box_code:
+        type: string
+      lock_box_name:
+        type: string
+      name:
+        type: string
+      uuid:
+        type: string
+      version_info:
+        type: string
   RestDocumentationConfig:
     properties:
       accessible:
@@ -1160,6 +1198,14 @@ definitions:
         type: string
       version_info:
         $ref: '#/definitions/VersionInfo'
+  UUID:
+    properties:
+      least_sig_bits:
+        format: int64
+        type: integer
+      most_sig_bits:
+        format: int64
+        type: integer
   UsageReset:
     properties:
       type:
@@ -1267,6 +1313,14 @@ definitions:
       encrypt:
         type: string
       psid:
+        type: string
+  VmConcurrent:
+    properties:
+      created:
+        format: date-time
+        type: string
+      keep_alive_sent:
+        format: date-time
         type: string
   VmConditionModel:
     properties:
@@ -1435,6 +1489,7 @@ definitions:
         type: string
       version:
         type: string
+  Void: {}
   WebSslCertificateView:
     properties:
       alternative_names:
@@ -1682,7 +1737,8 @@ paths:
           in: body
           name: body
           required: false
-          schema: null
+          schema:
+            $ref: '#/definitions/LdapSearchInput'
       produces:
         - '*/*'
       responses:
