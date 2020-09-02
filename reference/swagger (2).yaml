@@ -208,7 +208,6 @@ definitions:
         type: string
       subject:
         type: string
-  Chronology: {}
   ClusterJoin:
     properties:
       host:
@@ -255,13 +254,6 @@ definitions:
         type: string
       protector_type:
         type: string
-  DateTime:
-    properties:
-      i_chronology:
-        $ref: '#/definitions/Chronology'
-      i_millis:
-        format: int64
-        type: integer
   DebugChallengeView:
     properties:
       challenge:
@@ -411,18 +403,6 @@ definitions:
     properties:
       is_enabled:
         type: boolean
-  'Entry«string,KubernetesNodeAgent»':
-    properties:
-      key:
-        $ref: '#/definitions/KubernetesNodeAgent'
-  'Entry«string,KubernetesVolume»':
-    properties:
-      key:
-        $ref: '#/definitions/KubernetesVolume'
-  'Entry«string,string»':
-    properties:
-      key:
-        type: string
   Event:
     properties:
       action:
@@ -678,24 +658,6 @@ definitions:
         type: string
       version:
         type: string
-  KubernetesNode:
-    properties:
-      agents:
-        items:
-          $ref: '#/definitions/Entry«string,KubernetesNodeAgent»'
-        type: array
-      name:
-        type: string
-  KubernetesNodeAgent:
-    properties:
-      driver_type:
-        type: string
-      version:
-        type: string
-      volumes:
-        items:
-          $ref: '#/definitions/Entry«string,KubernetesVolume»'
-        type: array
   KubernetesNodeList:
     properties:
       nodes:
@@ -719,57 +681,6 @@ definitions:
       total_volumes:
         format: int32
         type: integer
-  KubernetesVolume:
-    properties:
-      attrs:
-        type: object
-      container_uuid:
-        format: uuid
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      status:
-        type: string
-      uid:
-        type: string
-  KubernetesVolumeModel:
-    properties:
-      attributes:
-        type: object
-      container_uuid:
-        format: uuid
-        type: string
-      driver_type:
-        type: string
-      name:
-        type: string
-      node_state:
-        items:
-          $ref: '#/definitions/Entry«string,string»'
-        type: array
-      state_consistent:
-        type: boolean
-      volume_id:
-        type: string
-      volume_uid:
-        type: string
-  LdapSearchInput:
-    properties:
-      base_search:
-        type: string
-      filter:
-        type: string
-      is_global_search:
-        type: boolean
-      scope:
-        format: int32
-        type: integer
-      search_attrs:
-        items:
-          type: string
-        type: array
   LicenseConfig:
     properties:
       start_date:
@@ -1031,44 +942,6 @@ definitions:
     properties:
       value:
         type: string
-  RegistrationModel:
-    properties:
-      ca_cert:
-        type: string
-      ca_private_key:
-        type: string
-      cert:
-        type: string
-      kmip_start_sequence:
-        format: int64
-        type: integer
-      public_address:
-        type: string
-      server_cert:
-        type: string
-      server_cert_alias:
-        type: string
-      server_key:
-        type: string
-      timestamp:
-        format: date-time
-        type: string
-  RegistrationRequest:
-    properties:
-      address:
-        type: string
-      csr:
-        type: string
-      lock_box_code:
-        type: string
-      lock_box_name:
-        type: string
-      name:
-        type: string
-      uuid:
-        type: string
-      version_info:
-        type: string
   RestDocumentationConfig:
     properties:
       accessible:
@@ -1287,14 +1160,6 @@ definitions:
         type: string
       version_info:
         $ref: '#/definitions/VersionInfo'
-  UUID:
-    properties:
-      least_sig_bits:
-        format: int64
-        type: integer
-      most_sig_bits:
-        format: int64
-        type: integer
   UsageReset:
     properties:
       type:
@@ -1402,14 +1267,6 @@ definitions:
       encrypt:
         type: string
       psid:
-        type: string
-  VmConcurrent:
-    properties:
-      created:
-        format: date-time
-        type: string
-      keep_alive_sent:
-        format: date-time
         type: string
   VmConditionModel:
     properties:
@@ -1578,7 +1435,6 @@ definitions:
         type: string
       version:
         type: string
-  Void: {}
   WebSslCertificateView:
     properties:
       alternative_names:
@@ -1826,8 +1682,7 @@ paths:
           in: body
           name: body
           required: false
-          schema:
-            $ref: '#/definitions/LdapSearchInput'
+          schema: null
       produces:
         - '*/*'
       responses:
