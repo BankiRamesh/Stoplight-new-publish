@@ -942,28 +942,6 @@ definitions:
     properties:
       value:
         type: string
-  RegistrationModel:
-    properties:
-      ca_cert:
-        type: string
-      ca_private_key:
-        type: string
-      cert:
-        type: string
-      kmip_start_sequence:
-        format: int64
-        type: integer
-      public_address:
-        type: string
-      server_cert:
-        type: string
-      server_cert_alias:
-        type: string
-      server_key:
-        type: string
-      timestamp:
-        format: date-time
-        type: string
   RegistrationRequest:
     properties:
       address:
@@ -1737,8 +1715,7 @@ paths:
           in: body
           name: body
           required: false
-          schema:
-            $ref: '#/definitions/LdapSearchInput'
+          schema: null
       produces:
         - '*/*'
       responses:
