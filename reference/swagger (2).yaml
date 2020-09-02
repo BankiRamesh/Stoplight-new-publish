@@ -1666,7 +1666,7 @@ paths:
         - application/json
       deprecated: false
       description: "<div>Get domain configuration<div class='security-permissions'>Security Permissions: <li>View System Configuration</li><li>Change System Configuration</li></div></div>"
-      operationId: get
+      operationId: getDomain
       produces:
         - '*/*'
       responses:
@@ -1699,7 +1699,7 @@ paths:
         - application/json
       deprecated: false
       description: "Configure domain<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Configure domain</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: join
+      operationId: joinDomainConfig
       parameters:
         - description: windowsDomainConfig
           in: body
@@ -1780,7 +1780,7 @@ paths:
 
         User Action: &nbsp;&nbsp;Upload LDAPS certificate<div></div>
         Security Permission: &nbsp;&nbsp; Change Server Specific Configuration
-      operationId: configWebCertificate
+      operationId: configWebCertificateLdaps
       parameters:
         - description: certificate
           in: formData
@@ -2377,7 +2377,7 @@ paths:
         - multipart/form-data
       deprecated: false
       description: "Upload S3 certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Upload S3 certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Backup Configuration</li></ul></div>"
-      operationId: configWebCertificate
+      operationId: configWebCertificateS3
       parameters:
         - description: certificate
           in: formData
@@ -2639,7 +2639,7 @@ paths:
         - multipart/form-data
       deprecated: false
       description: "Display certificate info<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: previewWebCertificate
+      operationId: previewWebCertificateInfoDisplay
       parameters:
         - description: type
           enum:
@@ -2731,7 +2731,7 @@ paths:
         - multipart/form-data
       deprecated: false
       description: "Upload and apply WEB certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Apply WEB certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: configWebCertificate
+      operationId: configWebCertificateUpload
       parameters:
         - description: type
           enum:
@@ -2791,7 +2791,7 @@ paths:
         Generate and download new CSR
         User Action: Generate new WebSSL CSR
         Security Permission: Change Server Specific Configuration
-      operationId: generateCsr
+      operationId: generateCsrDownload
       parameters:
         - description: common name
           in: query
@@ -2933,7 +2933,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get list of cluster members<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Cluster Members</li><li>Add Cluster Member</li><li>Delete Cluster Member</li></ul></div>"
-      operationId: getCluster
+      operationId: getClusterList
       parameters:
         - description: local
           in: query
@@ -3125,7 +3125,7 @@ paths:
         - application/json
       deprecated: false
       description: "Set local server name/address<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Set local server name/address</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: setPublicAddress
+      operationId: setPublicAddressLocal
       parameters:
         - description: address
           in: body
@@ -4161,7 +4161,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get DHCP servers configuration<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: getConfig
+      operationId: getConfigDHCP
       produces:
         - '*/*'
       responses:
@@ -4452,7 +4452,7 @@ paths:
         - application/json
       deprecated: false
       description: "Delete DNS server<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete DNS server</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: delete
+      operationId: deleteDNS
       parameters:
         - description: ipAddress
           in: path
@@ -4924,7 +4924,7 @@ paths:
         - application/json
       deprecated: false
       description: "Create keystore<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Create keystore</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add Keystore</li></ul></div>"
-      operationId: create
+      operationId: createKeyStore
       parameters:
         - description: settings
           in: body
@@ -5739,7 +5739,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get server certificate<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
-      operationId: getServerCertificates
+      operationId: getServerCertificatesNew
       produces:
         - '*/*'
       responses:
@@ -5770,7 +5770,7 @@ paths:
         - application/json
       deprecated: false
       description: "Change server certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change server certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: createServerCertificate
+      operationId: createServerCertificateChange
       produces:
         - '*/*'
       responses:
@@ -5802,7 +5802,7 @@ paths:
         - application/json
       deprecated: false
       description: "Generate and download new KMIP CA CSR<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Generate new KMIP CA CSR</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: generateCsr
+      operationId: generateCsrNewKmip
       parameters:
         - description: common name
           in: query
@@ -5865,7 +5865,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get server certificate's lifetime<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View System Configuration</li></ul></div>"
-      operationId: getCertificateLifetime
+      operationId: getCertificateLifetimeNew
       produces:
         - '*/*'
       responses:
@@ -5898,7 +5898,7 @@ paths:
         - application/json
       deprecated: false
       description: "Change KMIP certificate's lifetime<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change certificate's lifetime</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: modifyCertificateLifetime
+      operationId: modifyCertificateLifetimeKMIP
       parameters:
         - description: t
           in: body
@@ -5937,7 +5937,7 @@ paths:
         - application/json
       deprecated: false
       description: "Change KMIP certificate's lifetime<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change certificate's lifetime</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: modifyCertificateLifetime
+      operationId: modifyCertificateLifetimeKmipChange
       parameters:
         - description: kmipCertLifetime
           in: body
@@ -5976,7 +5976,7 @@ paths:
         - multipart/form-data
       deprecated: false
       description: "Display certificate info<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: previewWebCertificate
+      operationId: previewWebCertificateInfo
       parameters:
         - description: certificate
           in: formData
@@ -6016,7 +6016,7 @@ paths:
         - multipart/form-data
       deprecated: false
       description: "Upload and apply KMIP CA certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Apply KMIP CA certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: configWebCertificate
+      operationId: configWebCertificateApplyKMIP
       parameters:
         - description: certificate
           in: formData
@@ -6382,7 +6382,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get KMIP server information<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
-      operationId: getServerInfo
+      operationId: getServerInfoKMIPServer
       produces:
         - '*/*'
       responses:
@@ -6948,7 +6948,7 @@ paths:
         - application/json
       deprecated: false
       description: "Change Kubernetes certificate's lifetime<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change certificate's lifetime</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: modifyCertificateLifetime
+      operationId: modifyCertificateLifetimeKubernets
       parameters:
         - description: t
           in: body
@@ -7670,7 +7670,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get licenses list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Licenses</li><li>Upload License</li><li>Assign License</li></ul></div>"
-      operationId: getVmData
+      operationId: getVmDataLicenses
       produces:
         - '*/*'
       responses:
@@ -7706,7 +7706,7 @@ paths:
         - multipart/form-data
       deprecated: false
       description: "Upload license<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Upload license</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Upload License</li></ul></div>"
-      operationId: upload
+      operationId: uploadLicense
       parameters:
         - description: file
           in: formData
@@ -8736,7 +8736,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get licensed hosts list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></ul></div>"
-      operationId: getSocketLocations
+      operationId: getSocketLocationsHosts
       produces:
         - '*/*'
       responses:
@@ -9049,7 +9049,7 @@ paths:
         - application/json
       deprecated: false
       description: "Unlock vault<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Unlock Vault</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Unlock Vault</li></ul></div>"
-      operationId: unlock
+      operationId: unlockVault
       parameters:
         - description: code
           in: body
@@ -9865,7 +9865,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get list of roles<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Roles</li><li>Add Role</li><li>Delete Role</li><li>Modify Role</li><li>Add User</li><li>Change Role Administration</li></ul></div>"
-      operationId: getRoles
+      operationId: getRolesList
       produces:
         - '*/*'
       responses:
@@ -10211,7 +10211,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get list of Machines<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Machines</li><li>Remove Machine</li><li>Control Machine Boot</li><li>Change VM Encryption Policy</li><li>Change Machine Encryption</li><li>Change Machine Keys</li><li>Shred Machine</li></ul></div>"
-      operationId: get
+      operationId: getListMachines
       parameters:
         - description: pending_only
           in: query
@@ -12007,7 +12007,7 @@ paths:
         - application/json
       deprecated: false
       description: "Get list of user sessions<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View User Sessions</li><li>Terminate User Session</li></ul></div>"
-      operationId: getUsersSessions
+      operationId: getUsersSessionsList
       produces:
         - '*/*'
       responses:
@@ -12297,7 +12297,7 @@ paths:
         - application/json
       deprecated: false
       description: "Gets syslog configuration<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Syslog Configuration</li><li>Change Syslog Configuration</li></ul></div>"
-      operationId: get
+      operationId: getSyslog
       produces:
         - '*/*'
       responses:
