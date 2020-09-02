@@ -681,6 +681,21 @@ definitions:
       total_volumes:
         format: int32
         type: integer
+  LdapSearchInput:
+    properties:
+      base_search:
+        type: string
+      filter:
+        type: string
+      is_global_search:
+        type: boolean
+      scope:
+        format: int32
+        type: integer
+      search_attrs:
+        items:
+          type: string
+        type: array
   LicenseConfig:
     properties:
       start_date:
@@ -941,6 +956,28 @@ definitions:
   RawJsonField:
     properties:
       value:
+        type: string
+  RegistrationModel:
+    properties:
+      ca_cert:
+        type: string
+      ca_private_key:
+        type: string
+      cert:
+        type: string
+      kmip_start_sequence:
+        format: int64
+        type: integer
+      public_address:
+        type: string
+      server_cert:
+        type: string
+      server_cert_alias:
+        type: string
+      server_key:
+        type: string
+      timestamp:
+        format: date-time
         type: string
   RegistrationRequest:
     properties:
@@ -1715,7 +1752,8 @@ paths:
           in: body
           name: body
           required: false
-          schema: null
+          schema:
+            $ref: '#/definitions/LdapSearchInput'
       produces:
         - '*/*'
       responses:
