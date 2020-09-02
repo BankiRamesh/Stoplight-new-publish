@@ -208,7 +208,6 @@ definitions:
         type: string
       subject:
         type: string
-  Chronology: {}
   ClusterJoin:
     properties:
       host:
@@ -255,13 +254,6 @@ definitions:
         type: string
       protector_type:
         type: string
-  DateTime:
-    properties:
-      i_chronology:
-        $ref: '#/definitions/Chronology'
-      i_millis:
-        format: int64
-        type: integer
   DebugChallengeView:
     properties:
       challenge:
@@ -411,18 +403,6 @@ definitions:
     properties:
       is_enabled:
         type: boolean
-  'Entry«string,KubernetesNodeAgent»':
-    properties:
-      key:
-        $ref: '#/definitions/KubernetesNodeAgent'
-  'Entry«string,KubernetesVolume»':
-    properties:
-      key:
-        $ref: '#/definitions/KubernetesVolume'
-  'Entry«string,string»':
-    properties:
-      key:
-        type: string
   Event:
     properties:
       action:
@@ -678,24 +658,6 @@ definitions:
         type: string
       version:
         type: string
-  KubernetesNode:
-    properties:
-      agents:
-        items:
-          $ref: '#/definitions/Entry«string,KubernetesNodeAgent»'
-        type: array
-      name:
-        type: string
-  KubernetesNodeAgent:
-    properties:
-      driver_type:
-        type: string
-      version:
-        type: string
-      volumes:
-        items:
-          $ref: '#/definitions/Entry«string,KubernetesVolume»'
-        type: array
   KubernetesNodeList:
     properties:
       nodes:
@@ -719,42 +681,6 @@ definitions:
       total_volumes:
         format: int32
         type: integer
-  KubernetesVolume:
-    properties:
-      attrs:
-        type: object
-      container_uuid:
-        format: uuid
-        type: string
-      id:
-        type: string
-      name:
-        type: string
-      status:
-        type: string
-      uid:
-        type: string
-  KubernetesVolumeModel:
-    properties:
-      attributes:
-        type: object
-      container_uuid:
-        format: uuid
-        type: string
-      driver_type:
-        type: string
-      name:
-        type: string
-      node_state:
-        items:
-          $ref: '#/definitions/Entry«string,string»'
-        type: array
-      state_consistent:
-        type: boolean
-      volume_id:
-        type: string
-      volume_uid:
-        type: string
   LdapSearchInput:
     properties:
       base_search:
@@ -1031,44 +957,6 @@ definitions:
     properties:
       value:
         type: string
-  RegistrationModel:
-    properties:
-      ca_cert:
-        type: string
-      ca_private_key:
-        type: string
-      cert:
-        type: string
-      kmip_start_sequence:
-        format: int64
-        type: integer
-      public_address:
-        type: string
-      server_cert:
-        type: string
-      server_cert_alias:
-        type: string
-      server_key:
-        type: string
-      timestamp:
-        format: date-time
-        type: string
-  RegistrationRequest:
-    properties:
-      address:
-        type: string
-      csr:
-        type: string
-      lock_box_code:
-        type: string
-      lock_box_name:
-        type: string
-      name:
-        type: string
-      uuid:
-        type: string
-      version_info:
-        type: string
   RestDocumentationConfig:
     properties:
       accessible:
@@ -1287,14 +1175,6 @@ definitions:
         type: string
       version_info:
         $ref: '#/definitions/VersionInfo'
-  UUID:
-    properties:
-      least_sig_bits:
-        format: int64
-        type: integer
-      most_sig_bits:
-        format: int64
-        type: integer
   UsageReset:
     properties:
       type:
@@ -1402,14 +1282,6 @@ definitions:
       encrypt:
         type: string
       psid:
-        type: string
-  VmConcurrent:
-    properties:
-      created:
-        format: date-time
-        type: string
-      keep_alive_sent:
-        format: date-time
         type: string
   VmConditionModel:
     properties:
@@ -1578,7 +1450,6 @@ definitions:
         type: string
       version:
         type: string
-  Void: {}
   WebSslCertificateView:
     properties:
       alternative_names:
@@ -1624,7 +1495,7 @@ info:
   description: '<p>The REST API provides programmatic access to CloudLink Center.  The REST API identifies applications and users using OAuth; responses are available in JSON.</p><a href="/cloudlink/swaggerui/overview.html" style="font-size: large; font-weight: bold">Overview</a>'
   license:
     name: Ancillary Licence
-    url: /cloudlink/html/ancillary.htm
+    url: 'https://localhost:8080/cloudlink/html/ancillary.htm'
   termsOfService: /cloudlink/html/license.htm
   title: CloudLink Center REST API
   version: '1.0'
@@ -1634,7 +1505,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Leave domain<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Leave domain</span></div><div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View System Configuration</li><li>Change System Configuration</li></ul></div>"
+      description: "Leave domain<br><div class='user-action'>User Action:Leave domain</div><div class='security-permissions'>Security Permissions: <ul class='permissions-list'><li>View System Configuration</li><li>Change System Configuration</li></ul></div>"
       operationId: leave
       produces:
         - '*/*'
@@ -1665,8 +1536,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "<div>Get domain configuration<div class='security-permissions'>Security Permissions: <li>View System Configuration</li><li>Change System Configuration</li></div></div>"
-      operationId: getDomain
+      description: Get domain configuration.
+      operationId: getDomainConfiguration
       produces:
         - '*/*'
       responses:
@@ -1674,8 +1545,6 @@ paths:
           description: Processed
           schema:
             $ref: '#/definitions/AdStatus'
-          examples:
-            example-1: {}
         '201':
           description: The resource was created.
         '400':
@@ -1694,12 +1563,14 @@ paths:
         - oauth2:
             - all
       summary: get
+      tags:
+        - ad
     post:
       consumes:
         - application/json
       deprecated: false
-      description: "Configure domain<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Configure domain</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: joinDomainConfig
+      description: "Configure domain<div class='user-action'>User Action: Configure domain</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      operationId: joinDomain
       parameters:
         - description: windowsDomainConfig
           in: body
@@ -1736,7 +1607,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change domain configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change domain configuration</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      description: "Change domain configuration<div class='user-action'>User Action: Change domain configuration</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
       operationId: change
       parameters:
         - description: windowsDomainConfig
@@ -1775,12 +1646,8 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: |-
-        Upload LDAPS certificate <div></div><div></div>
-
-        User Action: &nbsp;&nbsp;Upload LDAPS certificate<div></div>
-        Security Permission: &nbsp;&nbsp; Change Server Specific Configuration
-      operationId: configWebCertificateLdaps
+      description: Upload LDAPS certificate
+      operationId: configWebCertificateLDAPS
       parameters:
         - description: certificate
           in: formData
@@ -1792,8 +1659,6 @@ paths:
       responses:
         '200':
           description: Processed
-          examples:
-            example-1: {}
         '201':
           description: The resource was created.
         '400':
@@ -1960,7 +1825,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get login banner message<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
+      description: Get login banner message
       operationId: getLoginBanner
       produces:
         - '*/*'
@@ -1993,7 +1858,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set login banner message<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change login banner message</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Set login banner message<div class='user-action'>User Action: Change login banner message</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div></div>"
       operationId: setLoginBanner
       parameters:
         - description: config
@@ -2080,7 +1945,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Download current backup file<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Download backup file</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Download Backup</li></ul></div>"
+      description: Download current backup file
       operationId: downloadBackup
       produces:
         - '*/*'
@@ -2111,7 +1976,7 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Restore system configuration from backup file<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Start restore process</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Restore Backup</li></ul></div>"
+      description: "Restore system configuration from backup file<div class='user-action'>User Action: Start restore process</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Restore Backup</li></ul></div>"
       operationId: restore
       parameters:
         - description: backupFile
@@ -2158,7 +2023,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Generate new backup file and upload it to backup store (if configured)<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Generate backup file</span></div><div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>Generate Backup</li><li>Generate Backup Key</li></ul></div>"
+      description: "Generate new backup file and upload it to backup store (if configured)<div class='user-action'>User Action: Generate backup file</div><div class='security-permissions'>Security Permissions: <ul class='permissions-list'><li>Generate Backup</li><li>Generate Backup Key</li></ul></div>"
       operationId: doBackup
       produces:
         - '*/*'
@@ -2190,7 +2055,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get information about last backup<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Backup Configuration</li><li>Generate Backup Key</li><li>Generate Backup</li><li>Download Backup</li><li>Change Backup Configuration</li><li>Restore Backup</li></ul></div>"
+      description: Get information about last backup
       operationId: getBackupInfo
       produces:
         - '*/*'
@@ -2224,7 +2089,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Generate and download new backup key<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Generate new backup key and file</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Generate Backup Key</li></ul></div>"
+      description: Generate and download new backup key
       operationId: getNewKey
       produces:
         - '*/*'
@@ -2256,7 +2121,7 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Restore keystores from backup file<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Restore keystores</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Restore Backup</li></ul></div>"
+      description: Restore keystores from backup file
       operationId: restoreKeystores
       parameters:
         - description: backupFile
@@ -2304,7 +2169,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get backup file prefix<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Backup Configuration</li><li>Generate Backup Key</li><li>Generate Backup</li><li>Download Backup</li><li>Change Backup Configuration</li><li>Restore Backup</li></ul></div>"
+      description: Get backup file prefix
       operationId: getPrefix
       produces:
         - '*/*'
@@ -2337,7 +2202,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set backup file prefix<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change backup file prefix</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Backup Configuration</li></ul></div>"
+      description: "Set backup file prefix<div class='user-action'>User Action: Change backup file prefix</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Backup Configuration</li></ul></div>"
       operationId: setPrefix
       parameters:
         - description: backupPrefix
@@ -2376,8 +2241,8 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Upload S3 certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Upload S3 certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Backup Configuration</li></ul></div>"
-      operationId: configWebCertificateS3
+      description: "Upload S3 certificate\n\nUser Action:\nUpload S3 certificate\n       \nSecurity Permission:\nChange Backup Configuration"
+      operationId: configWebCertificates3
       parameters:
         - description: certificate
           in: formData
@@ -2414,7 +2279,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change backup schedule<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change backup schedule</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Backup Configuration</li></ul></div>"
+      description: "<div>Change backup schedule <div class='user-action'>User Action: <li>Change backup schedule</li></div><div>Security Permission: <li>Change Backup Configuration</li></div></div>"
       operationId: setSchedule
       parameters:
         - description: schedule
@@ -2453,7 +2318,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Reset backup store configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Reset backup store configuration</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Backup Configuration</li></ul></div>"
+      description: "Reset backup store configuration<div class='user-action'>User Action:Reset backup store configuration</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Backup Configuration</li></ul></div>"
       operationId: resetBackupStore
       produces:
         - '*/*'
@@ -2484,7 +2349,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get backup store configuration<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Backup Configuration</li><li>Generate Backup Key</li><li>Generate Backup</li><li>Download Backup</li><li>Change Backup Configuration</li><li>Restore Backup</li></ul></div>"
+      description: "<div>Get backup store configuration<br><div class='security-permissions'>Security Permissions: <li>View Backup Configuration</li><li>Generate Backup Key</li><li>Generate Backup</li><li>Download Backup</li><li>Change Backup Configuration</li><li>Restore Backup</li></div></div>"
       operationId: getBackupStore
       produces:
         - '*/*'
@@ -2517,7 +2382,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Configure backup store<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Configure backup store</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Backup Configuration</li></ul></div>"
+      description: "Configure backup store<div class='user-action'>User Action:Configure backup store</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Backup Configuration</li></ul></div>"
       operationId: setBackupStore
       parameters:
         - description: config
@@ -2556,7 +2421,7 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Restore SVM certificate from backup file<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Restore SVM Certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Restore Backup</li></ul></div>"
+      description: "<div>Restore SVM certificate from backup file<div class='user-action'>User Action:<li>Restore SVM Certificate</li></span></div><div class='security-permissions'>Security Permission: <li>Restore Backup</li></div></div>"
       operationId: restoreMultiCertificate
       parameters:
         - description: backupFile
@@ -2638,8 +2503,8 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Display certificate info<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: previewWebCertificateInfoDisplay
+      description: "<div>Display certificate info<div class='security-permissions'>Security Permission:<li>Change Server Specific Configuration</li></div></div>"
+      operationId: previewWebCertificateInfo
       parameters:
         - description: type
           enum:
@@ -2697,7 +2562,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get WEB SSL certificate<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Get WEB SSL certificate<div class='security-permissions'>Security Permissions: <li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></div></div>"
       operationId: listWebSslCertificates
       produces:
         - '*/*'
@@ -2730,8 +2595,8 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Upload and apply WEB certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Apply WEB certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: configWebCertificateUpload
+      description: "Upload and apply WEB certificate<div class='user-action'>User Action:Apply WEB certificate</div><div class='security-permissions'>Security Permission:<ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      operationId: UploadWebCertificate
       parameters:
         - description: type
           enum:
@@ -2787,11 +2652,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: |-
-        Generate and download new CSR
-        User Action: Generate new WebSSL CSR
-        Security Permission: Change Server Specific Configuration
-      operationId: generateCsrDownload
+      description: "<div>Generate and download new CSR<div class='user-action'>User Action:<li>Generate new WebSSL CSR</li></div><div class='security-permissions'>Security Permission: <li>Change Server Specific Configuration</li></div></div>"
+      operationId: generateAndDownloadCsr
       parameters:
         - description: common name
           in: query
@@ -2892,7 +2754,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Join cluster<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Join cluster</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Join To Cluster</li></ul></div>"
+      description: "<div>Join cluster<div class='user-action'>User Action: <li>Join cluster</li></div><div class='security-permissions'>Security Permission: <li>Join To Cluster</li></div></div>"
       operationId: join
       parameters:
         - description: joinParams
@@ -2932,7 +2794,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of cluster members<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Cluster Members</li><li>Add Cluster Member</li><li>Delete Cluster Member</li></ul></div>"
+      description: "<div>Get list of cluster members<div class='security-permissions'>Security Permissions: <li>View Cluster Members</li><li>Add Cluster Member</li><li>Delete Cluster Member</li></div></div>"
       operationId: getClusterList
       parameters:
         - description: local
@@ -2975,7 +2837,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete member from cluster<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete member from cluster</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Cluster Member</li></ul></div>"
+      description: "Delete member from cluster<div class='user-action'>User Action:Delete member from cluster</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete Cluster Member</li></ul></div>"
       operationId: removeCluster
       parameters:
         - description: uuid
@@ -3012,7 +2874,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get cluster member<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Cluster Members</li><li>Add Cluster Member</li><li>Delete Cluster Member</li><li>Join To Cluster</li></ul></div>"
+      description: "<div>Get cluster member<div class='security-permissions'>Security Permissions: <li>View Cluster Members</li><li>Add Cluster Member</li><li>Delete Cluster Member</li><li>Join To Cluster</li></div></div>"
       operationId: getCluster
       parameters:
         - description: uuid
@@ -3091,7 +2953,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get server name/address<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Get server name/address<div class='security-permissions'>Security Permissions: <li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></div></div>"
       operationId: getPublicAddress
       produces:
         - '*/*'
@@ -3124,8 +2986,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set local server name/address<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Set local server name/address</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: setPublicAddressLocal
+      description: "Set local server name/address<div class='user-action'>User Action: Set local server name/address</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      operationId: setPublicAddress
       parameters:
         - description: address
           in: body
@@ -3163,8 +3025,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set node's server name/address<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Set node's server name/address</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: setPublicAddress
+      description: "<div>Set node's server name/address<div class='user-action'>User Action: <li>Set node's server name/address</li></div><div class='security-permissions'>Security Permission:<li>Change Server Specific Configuration</li></div></div>"
+      operationId: setNodesPublicAddress
       parameters:
         - description: address
           in: body
@@ -3207,7 +3069,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "symmetric snapshot<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Cluster Members</li></ul></div>"
+      description: "<div>symmetric snapshot<div class='security-permissions'>Security Permission: <li>View Cluster Members</li></div></div>"
       operationId: snapshot
       produces:
         - '*/*'
@@ -4160,8 +4022,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get DHCP servers configuration<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: getConfigDHCP
+      description: "<div>Get DHCP servers configuration<div class='security-permissions'>Security Permissions:<li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></div></div>"
+      operationId: getDHCPConfig
       produces:
         - '*/*'
       responses:
@@ -4193,7 +4055,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change DHCP configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change DHCP configuration</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Change DHCP configuration<div class='user-action'>User Action: Change DHCP configuration</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: config
       parameters:
         - description: config
@@ -4232,7 +4094,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get leases table<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Get leases table<div class='security-permissions'>Security Permissions: <li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></div></div>"
       operationId: getLeases
       produces:
         - '*/*'
@@ -4303,7 +4165,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Reset dhcp configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Reset dhcp configuration</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Reset dhcp configuration<div class='user-action'>User Action: <li>Reset dhcp configuration</li></div><div class='security-permissions'>Security Permission: <li>Change Server Specific Configuration</li></div>"
       operationId: resetConfig
       produces:
         - '*/*'
@@ -4335,7 +4197,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Gets DNS servers list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Gets DNS servers list<div class='security-permissions'>Security Permissions: <li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></div></div>"
       operationId: getId
       produces:
         - '*/*'
@@ -4371,7 +4233,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add DNS server<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add DNS server</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Add DNS server<div class='user-action'>User Action:Add DNS server</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: add
       parameters:
         - description: ip
@@ -4410,7 +4272,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Ping host<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Ping host<div class='security-permissions'>Security Permissions: <li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></div></div>"
       operationId: ping
       parameters:
         - description: host
@@ -4451,8 +4313,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete DNS server<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete DNS server</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: deleteDNS
+      description: "Delete DNS server<div class='user-action'>User Action:Delete DNS server</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      operationId: deleteDNSServer
       parameters:
         - description: ipAddress
           in: path
@@ -4488,7 +4350,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set DNS server as primary<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Set DNS server as primary</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Set DNS server as primary<div class='user-action'>User Action: <li>Set DNS server as primary</li></div><div class='security-permissions'>Security Permission: <li>Change Server Specific Configuration</li></div></div>"
       operationId: primary
       parameters:
         - description: ipAddress
@@ -4559,7 +4421,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change REST documentation configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change REST documentation configuration</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      description: "Change REST documentation configuration<div class='user-action'>User Action:Change REST documentation configuration</div><div class='security-permissions'>Security Permission:<ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
       operationId: setDocConfig
       parameters:
         - description: config
@@ -4598,7 +4460,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get configuration<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
+      description: "<div>Get configuration<div class='security-permissions'>Security Permission: <li>View Server Specific Configuration</li></div></div>"
       operationId: getSmtpServerConfig
       produces:
         - '*/*'
@@ -4631,7 +4493,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change email notification settings</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Change configuration<div class='user-action'>User Action: Change email notification settings</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: setSmtpServerConfig
       parameters:
         - description: config
@@ -4670,7 +4532,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get recipients<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
+      description: "<div>Get recipients<div class='security-permissions'>Security Permission: <li>View Server Specific Configuration</li></div></div>"
       operationId: getRecipients
       produces:
         - '*/*'
@@ -4706,7 +4568,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add new recipient<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add email recipient</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Add new recipient<div class='user-action'>User Action:Add email recipient</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: addRecipient
       parameters:
         - description: recipient
@@ -4745,7 +4607,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete recipient<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete email recipient</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Delete recipient<div class='user-action'>User Action: Delete email recipient</div><div class='security-permissions'>Security Permission: <li>Change Server Specific Configuration</li></div></div>"
       operationId: deleteRecipient
       parameters:
         - description: address
@@ -4783,7 +4645,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get email subject format string<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
+      description: "<div>Get email subject format string<div class='security-permissions'>Security Permission: <li>View Server Specific Configuration</li></div></div>"
       operationId: getSubject
       produces:
         - '*/*'
@@ -4816,7 +4678,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set email subject format string<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Set notification email subject format</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Set email subject format string<div class='user-action'>User Action:Set notification email subject format</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: setSubject
       parameters:
         - description: format
@@ -4855,7 +4717,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Send test email<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Send test email</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Send test email<div class='user-action'>User Action:<li>Send test email</li></div><div class='security-permissions'>Security Permission: <li>Change Server Specific Configuration</li></div></div>"
       operationId: sendTestEmail
       produces:
         - '*/*'
@@ -4887,7 +4749,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get keystores list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Keystores</li><li>Add Keystore</li><li>Delete Keystore</li><li>Modify Keystore</li><li>Move Keys</li></ul></div>"
+      description: "<div>Get keystores list<div class='security-permissions'>Security Permissions: <li>View Keystores</li><li>Add Keystore</li><li>Delete Keystore</li><li>Modify Keystore</li><li>Move Keys</li></div></div>"
       operationId: getKeystoreList
       produces:
         - '*/*'
@@ -4923,8 +4785,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Create keystore<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Create keystore</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add Keystore</li></ul></div>"
-      operationId: createKeyStore
+      description: "Create keystore<div class='user-action'>User Action:Create keystore</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Add Keystore</li></ul></div>"
+      operationId: createKeystore
       parameters:
         - description: settings
           in: body
@@ -4962,7 +4824,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Move keys status<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Move Keys</li></ul></div>"
+      description: "<div>Move keys status<div class='security-permissions'>Security Permission: <li>Move Keys</li></div></div>"
       operationId: moveKeysStatus
       produces:
         - '*/*'
@@ -5115,7 +4977,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete keystore<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete keystore</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Keystore</li></ul></div>"
+      description: "Delete keystore<div class='user-action'>User Action: Delete keystore</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete Keystore</li></ul></div>"
       operationId: deleteKeystore
       parameters:
         - description: keystore
@@ -5152,7 +5014,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get keystore configuration<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Keystores</li><li>Add Keystore</li><li>Delete Keystore</li><li>Modify Keystore</li><li>Move Keys</li></ul></div>"
+      description: "<div>Get keystore configuration<div class='security-permissions'>Security Permissions:<li>View Keystores</li><li>Add Keystore</li><li>Delete Keystore</li><li>Modify Keystore</li><li>Move Keys</li></div></div>"
       operationId: getKeystore
       parameters:
         - description: keystoreDb
@@ -5192,7 +5054,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change keystore description<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change keystore description</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Keystore</li></ul></div>"
+      description: "<div>Change keystore description<div class='user-action'>User Action:<li>Change keystore description</li></div><div class='security-permissions'>Security Permission: <li>Delete Keystore</li></div></div>"
       operationId: changeKeystoreDescription
       parameters:
         - description: keystore
@@ -5236,7 +5098,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get keys list from the keystore<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Keystores</li><li>Add Keystore</li><li>Delete Keystore</li><li>Modify Keystore</li><li>Move Keys</li></ul></div>"
+      description: "<div>Get keys list from the keystore<div class='security-permissions'>Security Permissions: <li>View Keystores</li><li>Add Keystore</li><li>Delete Keystore</li><li>Modify Keystore</li><li>Move Keys</li></div></div>"
       operationId: getKeys
       parameters:
         - description: keystore
@@ -5290,7 +5152,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Modify key location<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify key location</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Keystore</li></ul></div>"
+      description: "<div>Modify key location<div class='user-action'>User Action:<li>Modify key location</li></div><div class='security-permissions'>Security Permission:<li>Modify Keystore</li></div></div>"
       operationId: modifyDataStore
       parameters:
         - description: keystore
@@ -5334,7 +5196,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Initiate move keys from this keystore to another keystore<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Initiate move keys from keystore</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Move Keys</li></ul></div>"
+      description: "<div>Initiate move keys from this keystore to another keystore<div class='user-action'>User Action:<li>Initiate move keys from keystore</li></span></div><div class='security-permissions'>Security Permission: <li>Move Keys</li></div></div>"
       operationId: moveKeys
       parameters:
         - description: keystoreDb
@@ -5378,7 +5240,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Modify protector<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify protector</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Keystore</li></ul></div>"
+      description: "<div>Modify protector<div class='user-action'>User Action:<li>Modify protector</li></span></div><div class='security-permissions'>Security Permission: <li>Modify Keystore</li></div></div>"
       operationId: modifyKekStore
       parameters:
         - description: keystore
@@ -5594,7 +5456,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get KMIP server certificate subject alternative names<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
+      description: "<div>Get KMIP server certificate subject alternative names<div class='security-permissions'>Security Permission: <li>View Server Specific Configuration</li></div></div>"
       operationId: getAlternativeNames
       produces:
         - '*/*'
@@ -5627,7 +5489,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change KMIP server certificate subject alternative names<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change KMIP server certificate subject alternative names</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Change KMIP server certificate subject alternative names<div class='user-action'>User Action:Change KMIP server certificate subject alternative names</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: setAlternativeNames
       parameters:
         - description: alternativeNames
@@ -5666,7 +5528,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get KMIP server audit level<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
+      description: "<div>Get KMIP server audit level<div class='security-permissions'>Security Permission: <li>View Server Specific Configuration</li></div></div>"
       operationId: getServerAudit
       produces:
         - '*/*'
@@ -5699,7 +5561,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change KMIP audit level<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change KMIP audit level</span></div><div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>Shred KMIP Partition</li><li>View KMIP Objects</li></ul></div>"
+      description: "Change KMIP audit level<div class='user-action'>User Action: Change KMIP audit level</div><div class='security-permissions'>Security Permissions: <ul class='permissions-list'><li>Shred KMIP Partition</li><li>View KMIP Objects</li></ul></div>"
       operationId: setServerAudit
       parameters:
         - description: audit
@@ -5738,8 +5600,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get server certificate<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
-      operationId: getServerCertificatesNew
+      description: "<div>Get server certificate<div class='security-permissions'>Security Permission: <li>View Server Specific Configuration</li></div></div>"
+      operationId: getKmipServerCertificates
       produces:
         - '*/*'
       responses:
@@ -5769,8 +5631,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change server certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change server certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
-      operationId: createServerCertificateChange
+      description: "Change server certificate<div class='user-action'>User Action:Change server certificate</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      operationId: createAndChangeServerCertificate
       produces:
         - '*/*'
       responses:
@@ -5801,8 +5663,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Generate and download new KMIP CA CSR<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Generate new KMIP CA CSR</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: generateCsrNewKmip
+      description: "<div>Generate and download new KMIP CA CSR<div class='user-action'>User Action:<li>Generate new KMIP CA CSR</li></div><div class='security-permissions'>Security Permission: <li>Change System Configuration</li></div></div>"
+      operationId: generateKMIPCsr
       parameters:
         - description: common name
           in: query
@@ -5864,8 +5726,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get server certificate's lifetime<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View System Configuration</li></ul></div>"
-      operationId: getCertificateLifetimeNew
+      description: "<div>Get server certificate's lifetime<div class='security-permissions'>Security Permission: <li>View System Configuration</li></div></div>"
+      operationId: getCertificateLifetime
       produces:
         - '*/*'
       responses:
@@ -5897,8 +5759,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change KMIP certificate's lifetime<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change certificate's lifetime</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: modifyCertificateLifetimeKMIP
+      description: "Change KMIP certificate's lifetime<div class='user-action'>User Action: Change certificate's lifetime</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      operationId: modifyAndChangeCertificateLifetime
       parameters:
         - description: t
           in: body
@@ -5936,8 +5798,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change KMIP certificate's lifetime<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change certificate's lifetime</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: modifyCertificateLifetimeKmipChange
+      description: "<div>Change KMIP certificate's lifetime<div class='user-action'>User Action: <li>Change certificate's lifetime</li></div><div class='security-permissions'>Security Permission: <li>Change System Configuration</li></div></div>"
+      operationId: modifyKMIPCertificateLifetime
       parameters:
         - description: kmipCertLifetime
           in: body
@@ -5975,8 +5837,8 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Display certificate info<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: previewWebCertificateInfo
+      description: "<div>Display certificate info<div class='security-permissions'>Security Permission: <li>Change System Configuration</li></div></div>"
+      operationId: DisplayWebCertificateInfo
       parameters:
         - description: certificate
           in: formData
@@ -6015,8 +5877,8 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Upload and apply KMIP CA certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Apply KMIP CA certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: configWebCertificateApplyKMIP
+      description: "<div>Upload and apply KMIP CA certificate<div class='user-action'>User Action:<li>Apply KMIP CA certificate</li></div><div class='security-permissions'>Security Permission: <li>Change System Configuration</li></div></div>"
+      operationId: configWebCertificate
       parameters:
         - description: certificate
           in: formData
@@ -6053,7 +5915,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get KMIP clients list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View KMIP Clients</li><li>Add KMIP Client</li><li>Modify KMIP Client</li><li>Delete KMIP Client</li></ul></div>"
+      description: "<div>Get KMIP clients list<div class='security-permissions'>Security Permissions: <li>View KMIP Clients</li><li>Add KMIP Client</li><li>Modify KMIP Client</li><li>Delete KMIP Client</li></div></div>"
       operationId: getKmipClients
       produces:
         - '*/*'
@@ -6089,7 +5951,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Create new KMIP client<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Create KMIP client</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add KMIP Client</li></ul></div>"
+      description: "Create new KMIP client<div class='user-action'>User Action:Create KMIP client</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Add KMIP Client</li></ul></div>"
       operationId: createKmipClient
       parameters:
         - description: model
@@ -6130,7 +5992,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete KMIP client<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete KMIP client</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete KMIP Client</li></ul></div>"
+      description: "Delete KMIP client<div class='user-action'>User Action: Delete KMIP client</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete KMIP Client</li></ul></div>"
       operationId: deleteKmipClient
       parameters:
         - description: client
@@ -6167,7 +6029,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get KMIP client<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View KMIP Clients</li></ul></div>"
+      description: "<div>Get KMIP client<div class='security-permissions'>Security Permission: <li>View KMIP Clients</li></div></div>"
       operationId: getKmipClient
       parameters:
         - description: client
@@ -6207,7 +6069,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Generate new KMIP client's certificate in PEM<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Generate new KMIP client's certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify KMIP Client</li></ul></div>"
+      description: "<div>Generate new KMIP client's certificate in PEM<div class='user-action'>User Action: <li>Generate new KMIP client's certificate</li></div><div class='security-permissions'>Security Permission: <li>Modify KMIP Client</li></div></div>"
       operationId: generateKmipClientCertificatePem
       parameters:
         - description: client
@@ -6247,7 +6109,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Generate new KMIP client's certificate in PKCS12<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Generate new KMIP client's certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify KMIP Client</li></ul></div>"
+      description: "<div>Generate new KMIP client's certificate in PKCS12<div class='user-action'>User Action: <li>Generate new KMIP client's certificateZ</li></div><div class='security-permissions'>Security Permission: <li>Modify KMIP Client</li</div></div>"
       operationId: generateKmipClientCertificatePkcs12
       parameters:
         - description: client
@@ -6293,7 +6155,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change KMIP client's notes<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change KMIP client's notes</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify KMIP Client</li></ul></div>"
+      description: "<div>Change KMIP client's notes<div class='user-action'>User Action:<li>Change KMIP client's notes</li></div><div class='security-permissions'>Security Permission:<li>Modify KMIP Client</li></div></div>"
       operationId: changeKmipClientNotes
       parameters:
         - description: client
@@ -6337,7 +6199,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change KMIP client's password<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change KMIP client's password</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify KMIP Client</li></ul></div>"
+      description: "<div>Change KMIP client's password<div class='user-action'>User Action:<li>Change KMIP client's password</li></div><div class='security-permissions'>Security Permission: <li>Modify KMIP Client</li></div></div>"
       operationId: changeKmipClientPassword
       parameters:
         - description: client
@@ -6381,8 +6243,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get KMIP server information<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
-      operationId: getServerInfoKMIPServer
+      description: "<div>Get KMIP server information<div class='security-permissions'>Security Permission:<li>View Server Specific Configuration</li></div></div>"
+      operationId: getServerInfo
       produces:
         - '*/*'
       responses:
@@ -6415,7 +6277,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get KMIP partitions list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View KMIP Partitions</li><li>Add KMIP Partition</li><li>Modify KMIP Partition</li><li>View KMIP Objects</li></ul></div>"
+      description: "<div>Get KMIP partitions list<div class='security-permissions'>Security Permissions: <li>View KMIP Partitions</li><li>Add KMIP Partition</li><li>Modify KMIP Partition</li><li>View KMIP Objects</li></div></div>"
       operationId: getKmipPartitions
       produces:
         - '*/*'
@@ -6451,7 +6313,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Create new KMIP partition<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Create KMIP partition</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add KMIP Partition</li></ul></div>"
+      description: "Create new KMIP partition<div class='user-action'>User Action: Create KMIP partition </div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Add KMIP Partition</li></ul></div>"
       operationId: createKmipPartition
       parameters:
         - description: model
@@ -6490,7 +6352,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Shred KMIP partition<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Shred KMIP partition</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Shred KMIP Partition</li></ul></div>"
+      description: "Shred KMIP partition<div class='user-action'>User Action: Shred KMIP partition</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Shred KMIP Partition</li></ul></div>"
       operationId: shredKmipPartition
       parameters:
         - description: partition
@@ -6527,7 +6389,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get KMIP partition<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View KMIP Partitions</li><li>Add KMIP Partition</li><li>Shred KMIP Partition</li><li>Modify KMIP Partition</li></ul></div>"
+      description: "<div>Get KMIP partition<div class='security-permissions'>Security Permissions:<li>View KMIP Partitions</li><li>Add KMIP Partition</li><li>Shred KMIP Partition</li><li>Modify KMIP Partition</li></div></div>"
       operationId: getKmipPartition
       parameters:
         - description: partition
@@ -6566,7 +6428,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Modify KMIP partition<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify KMIP partition</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify KMIP Partition</li></ul></div>"
+      description: "Modify KMIP partition<div class='user-action'>User Action:Modify KMIP partition</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Modify KMIP Partition</li></ul></div>"
       operationId: modifyKmipPartition
       parameters:
         - description: partition
@@ -6610,7 +6472,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "View KMIP objects<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View KMIP Objects</li></ul></div>"
+      description: "<div>View KMIP objects<div class='security-permissions'>Security Permission: <li>View KMIP Objects</li></div></div>"
       operationId: getKmipPartitionObjects
       parameters:
         - description: partition
@@ -6664,7 +6526,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Shred KMIP object<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Shred KMIP object</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Shred KMIP Object</li></ul></div>"
+      description: "<div>Shred KMIP object<div class='user-action'>User Action: <li>Shred KMIP object</li></div><div class='security-permissions'>Security Permission: <li>Shred KMIP Object</li></div></div>"
       operationId: shredKmipObject
       parameters:
         - description: partition
@@ -6707,7 +6569,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Rotate key<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Rotate key</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify KMIP Partition</li></ul></div>"
+      description: "<div>Rotate key<div class='user-action'>User Action:<li>Rotate key</li></div><div class='security-permissions'>Security Permission:<li>Modify KMIP Partition</li></div></div>"
       operationId: kmipPartitionRotateKey
       parameters:
         - description: partition
@@ -6750,7 +6612,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Stop key rotation<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Stop key rotation</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify KMIP Partition</li></ul></div>"
+      description: "<div>Stop key rotation<div class='user-action'>User Action:<li>Stop key rotation</li></div><div class='security-permissions'>Security Permission: <li>Modify KMIP Partition</li></div></div>"
       operationId: kmipPartitionStopKeyRotate
       parameters:
         - description: partition
@@ -6788,7 +6650,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get server certificate<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
+      description: "<div>Get server certificate<div class='security-permissions'>Security Permission: <li>View Server Specific Configuration</li></div></div>"
       operationId: getServerCertificates
       produces:
         - '*/*'
@@ -6819,7 +6681,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change server certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change server certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Change server certificate<div class='user-action'>User Action: Change server certificate</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: createServerCertificate
       produces:
         - '*/*'
@@ -6851,7 +6713,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Generate and download new Kubernetes CA CSR<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Generate new Kubernetes CA CSR</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      description: "<div>Generate and download new Kubernetes CA CSR<div class='user-action'>User Action: <li>Generate new Kubernetes CA CSR</li></div><div class='security-permissions'>Security Permission: <li>Change System Configuration</li></div></div>"
       operationId: generateCsr
       parameters:
         - description: common name
@@ -6914,8 +6776,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get server certificate's lifetime<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View System Configuration</li></ul></div>"
-      operationId: getCertificateLifetime
+      description: "<div>Get server certificate's lifetime<div class='security-permissions'>Security Permission: <li>View System Configuration</li></ul></div></div>"
+      operationId: getServerCertificateLifetime
       produces:
         - '*/*'
       responses:
@@ -6947,8 +6809,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change Kubernetes certificate's lifetime<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change certificate's lifetime</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: modifyCertificateLifetimeKubernets
+      description: "Change Kubernetes certificate's lifetime<div class='user-action'>User Action:Change certificate's lifetime</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      operationId: modifyCertificateLifetime
       parameters:
         - description: t
           in: body
@@ -6986,8 +6848,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change Kubernetes certificate's lifetime<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change certificate's lifetime</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: modifyCertificateLifetime
+      description: "<div>Change Kubernetes certificate's lifetime<div class='user-action'>User Action:<li>Change certificate's lifetime</li></div><div class='security-permissions'>Security Permission: <li>Change System Configuration</li></div></div>"
+      operationId: modifyKubernetesCertificateLifetime
       parameters:
         - description: kubernetesCertLifetime
           in: body
@@ -7025,7 +6887,7 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Display certificate info<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      description: "<div>Display certificate info<div class='security-permissions'>Security Permission: <li>Change System Configuration</li></div></div>"
       operationId: previewWebCertificate
       parameters:
         - description: certificate
@@ -7065,8 +6927,8 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Upload and apply Kubernetes CA certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Apply Kubernetes CA certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: configWebCertificate
+      description: "<div>Upload and apply Kubernetes CA certificate<div class='user-action'>User Action:<li>Apply Kubernetes CA certificate</li></div><div class='security-permissions'>Security Permission: <li>Change System Configuration</li></div></div>"
+      operationId: configAndUploadWebCertificate
       parameters:
         - description: certificate
           in: formData
@@ -7103,7 +6965,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get Kubernetes clusters list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Kubernetes Clusters</li><li>Add Kubernetes Cluster</li><li>Modify Kubernetes Cluster</li><li>Delete Kubernetes Cluster</li></ul></div>"
+      description: "<div>Get Kubernetes clusters list<div class='security-permissions'>Security Permissions: <li>View Kubernetes Clusters</li><li>Add Kubernetes Cluster</li><li>Modify Kubernetes Cluster</li><li>Delete Kubernetes Cluster</li></div></div>"
       operationId: getKubernetesClusters
       produces:
         - '*/*'
@@ -7139,7 +7001,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Create new Kubernetes cluster<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Create Kubernetes cluster</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add Kubernetes Cluster</li></ul></div>"
+      description: "Create new Kubernetes cluster<div class='user-action'>User Action: Create Kubernetes cluster</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Add Kubernetes Cluster</li></ul></div>"
       operationId: createKubernetesCluster
       parameters:
         - description: model
@@ -7180,7 +7042,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Accept pending volume on given node<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Accept Kubernetes volume</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Control Kubernetes Volumes</li></ul></div>"
+      description: "<div>Accept pending volume on given node<div class='user-action'>User Action:<li>Accept Kubernetes volume</li></div><div class='security-permissions'>Security Permission: <li>Control Kubernetes Volumes</li></div></div>"
       operationId: acceptLocalVolume
       parameters:
         - description: cluster
@@ -7228,7 +7090,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of Kubernetes node volumes<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Kubernetes Volumes</li><li>Control Kubernetes Volumes</li></ul></div>"
+      description: "<div>Get list of Kubernetes node volumes<div class='security-permissions'>Security Permissions: <li>View Kubernetes Volumes</li><li>Control Kubernetes Volumes</li></div></div>"
       operationId: getKubernetesNodeVolumes
       parameters:
         - description: cluster
@@ -7273,7 +7135,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Accept pending volume on given node<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Accept Kubernetes volume</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Control Kubernetes Volumes</li></ul></div>"
+      description: "<div>Accept pending volume on given node<div class='user-action'>User Action:<li>Accept Kubernetes volume</li></div><div class='security-permissions'>Security Permission: <li>Control Kubernetes Volumes</li></div></div>"
       operationId: acceptVolume
       parameters:
         - description: cluster
@@ -7321,7 +7183,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete Kubernetes cluster<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete Kubernetes cluster</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Kubernetes Cluster</li></ul></div>"
+      description: "Delete Kubernetes cluster<div class='user-action'>User Action:Delete Kubernetes cluster</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete Kubernetes Cluster</li></ul></div>"
       operationId: removeKubernetesCluster
       parameters:
         - description: cluster
@@ -7358,7 +7220,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get Kubernetes cluster<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Kubernetes Clusters</li><li>Add Kubernetes Cluster</li><li>Modify Kubernetes Cluster</li><li>Delete Kubernetes Cluster</li></ul></div>"
+      description: "<div>Get Kubernetes cluster<div class='security-permissions'>Security Permissions:<li>View Kubernetes Clusters</li><li>Add Kubernetes Cluster</li><li>Modify Kubernetes Cluster</li><li>Delete Kubernetes Cluster</li></div></div>"
       operationId: getKubernetesCluster
       parameters:
         - description: cluster
@@ -7397,7 +7259,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Modify Kubernetes cluster<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify Kubernetes cluster</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Kubernetes Cluster</li></ul></div>"
+      description: "Modify Kubernetes cluster<div class='user-action'>User Action:Modify Kubernetes cluster</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Modify Kubernetes Cluster</li></ul></div>"
       operationId: modifyKubernetesCluster
       parameters:
         - description: cluster
@@ -7441,7 +7303,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Generate new Kubernetes cluster certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Generate new Kubernetes cluster certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Kubernetes Cluster</li></ul></div>"
+      description: "<div>Generate new Kubernetes cluster certificate<div class='user-action'>User Action:<li>Generate new Kubernetes cluster certificate</li></div><div class='security-permissions'>Security Permission: <li>Modify Kubernetes Cluster</li></div></div>"
       operationId: generateNewK8sClusterCertificate
       parameters:
         - description: cluster
@@ -7481,7 +7343,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get Kubernetes node list from the cluster connect to current server<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Kubernetes Nodes</li></ul></div>"
+      description: "<div>Get Kubernetes node list from the cluster connect to current server<div class='security-permissions'>Security Permission:<li>View Kubernetes Nodes</li></div></div>"
       operationId: getKubernetesNodes
       parameters:
         - description: cluster
@@ -7521,7 +7383,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of all volumes in a cluster<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Kubernetes Volumes</li><li>Control Kubernetes Volumes</li></ul></div>"
+      description: "<div>Get list of all volumes in a cluster<div class='security-permissions'>Security Permissions:<li>View Kubernetes Volumes</li><li>Control Kubernetes Volumes</li></div></div>"
       operationId: getKubernetesClusterVolumes
       parameters:
         - description: cluster
@@ -7598,8 +7460,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get Kubernetes Information<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
-      operationId: getServerInfo
+      description: "<div>Get Kubernetes Information<div class='security-permissions'>Security Permission: <li>View Server Specific Configuration</li></div></div>"
+      operationId: getKubernetesServerInfo
       produces:
         - '*/*'
       responses:
@@ -7632,7 +7494,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get Kubernetes node list from all clusters<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Kubernetes Nodes</li></ul></div>"
+      description: "<div>Get Kubernetes node list from all clusters<div class='security-permissions'>Security Permission: <li>View Kubernetes Nodes</li></div></div>"
       operationId: getKubernetesAllNodes
       produces:
         - '*/*'
@@ -7669,8 +7531,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get licenses list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Licenses</li><li>Upload License</li><li>Assign License</li></ul></div>"
-      operationId: getVmDataLicenses
+      description: "<div>Get licenses list<div class='security-permissions'>Security Permissions: <li>View Licenses</li><li>Upload License</li><li>Assign License</li></div</div>"
+      operationId: getVmData
       produces:
         - '*/*'
       responses:
@@ -7705,8 +7567,8 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Upload license<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Upload license</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Upload License</li></ul></div>"
-      operationId: uploadLicense
+      description: "Upload license<div class='user-action'>User Action: Upload license</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Upload License</li></ul></div>"
+      operationId: upload
       parameters:
         - description: file
           in: formData
@@ -7743,7 +7605,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get licenses usage<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Machines Usage</li><li>Reset Machines Usage</li></ul></div>"
+      description: "<div>Get licenses usage<div class='security-permissions'>Security Permissions: <li>View Machines Usage</li><li>Reset Machines Usage</li></div></div>"
       operationId: usageGet
       produces:
         - '*/*'
@@ -7776,7 +7638,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Reset licenses usage<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Reset usage</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Reset Machines Usage</li></ul></div>"
+      description: "Reset licenses usage<div class='user-action'>User Action:Reset usage</div><div class='security-permissions'>Security Permission:<ul class='permissions-list'><li>Reset Machines Usage</li></ul></div>"
       operationId: usageReset
       parameters:
         - description: type
@@ -7815,7 +7677,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete license<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete license</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete License</li></ul></div>"
+      description: "Delete license<div class='user-action'>User Action: Delete license</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete License</li></ul></div>"
       operationId: deleteLicense
       parameters:
         - description: license
@@ -7852,8 +7714,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get license<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Licenses</li><li>Upload License</li><li>Assign License</li></ul></div>"
-      operationId: getVmData
+      description: "<div>Get license<div class='security-permissions'>Security Permissions: <li>View Licenses</li><li>Upload License</li><li>Assign License</li></div></div>"
+      operationId: getVmDataAndLicense
       parameters:
         - description: license
           in: path
@@ -7892,7 +7754,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Assign license<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Assign license</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Assign License</li></ul></div>"
+      description: "<div>Assign license<div class='user-action'>User Action: <li>Assign license</li></div><div class='security-permissions'>Security Permission: <li>Assign License</li></div></div>"
       operationId: assignVm
       parameters:
         - description: license
@@ -7936,7 +7798,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get inventory<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Providers</li><li>Add Provider</li><li>Delete Provider</li><li>Modify Provider</li><li>Modify Approved Location</li><li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></ul></div>"
+      description: "<div>Get inventory<div class='security-permissions'>Security Permissions: <li>View Providers</li><li>Add Provider</li><li>Delete Provider</li><li>Modify Provider</li><li>Modify Approved Location</li><li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></div></div>"
       operationId: getInventory
       parameters:
         - description: hostsOnly
@@ -7979,7 +7841,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get approved locations list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Approved Locations</li><li>Add Approved Location</li><li>Delete Approved Location</li><li>Modify Approved Location</li></ul></div>"
+      description: "<div>Get approved locations list<div class='security-permissions'>Security Permissions: <li>View Approved Locations</li><li>Add Approved Location</li><li>Delete Approved Location</li><li>Modify Approved Location</li></div></div>"
       operationId: getLocations
       produces:
         - '*/*'
@@ -8015,7 +7877,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Create new approved location<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Create approved location</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add Approved Location</li></ul></div>"
+      description: "Create new approved location<div class='user-action'>User Action:Create approved location</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Add Approved Location</li></ul></div>"
       operationId: createLocation
       parameters:
         - description: approvedLocationConfig
@@ -8054,7 +7916,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete approved location<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete approved location</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Approved Location</li></ul></div>"
+      description: "Delete approved location<div class='user-action'>User Action:Delete approved location</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete Approved Location</li></ul></div>"
       operationId: deleteLocation
       parameters:
         - description: approvedLocation
@@ -8091,7 +7953,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get approved location<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Approved Locations</li><li>Add Approved Location</li><li>Delete Approved Location</li><li>Modify Approved Location</li></ul></div>"
+      description: "<div>Get approved location<div class='security-permissions'>Security Permissions: <li>View Approved Locations</li><li>Add Approved Location</li><li>Delete Approved Location</li><li>Modify Approved Location</li></div></div>"
       operationId: getLocation
       parameters:
         - description: approvedLocation
@@ -8130,7 +7992,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Modify approved location<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify approved location</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Approved Location</li></ul></div>"
+      description: "Modify approved location<div class='user-action'>User Action:Modify approved location</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Modify Approved Location</li></ul></div>"
       operationId: modifyLocation
       parameters:
         - description: approvedLocation
@@ -8174,7 +8036,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add instance<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add location instance</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Approved Location</li></ul></div>"
+      description: "<div>Add instance<div class='user-action'>User Action:<li>Add location instance</li></div><div class='security-permissions'>Security Permission: <li>Modify Approved Location</li></div></div>"
       operationId: addLocation
       parameters:
         - description: approvedLocation
@@ -8218,7 +8080,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete instance<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete location instance</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Approved Location</li></ul></div>"
+      description: "<div>Delete instance<div class='user-action'>User Action: <li>Delete location instance</li></div><div class='security-permissions'>Security Permission: <li>Delete Approved Location</li></div></div>"
       operationId: deleteLocationProvider
       parameters:
         - description: locationProvider
@@ -8261,7 +8123,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete instance<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete location instance</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Approved Location</li></ul></div>"
+      description: "<div>Delete instance<div class='user-action'>User Action:<li>Delete location instance</li></div><div class='security-permissions'>Security Permission: <li>Delete Approved Location</li></div></div>"
       operationId: deleteLocationCluster
       parameters:
         - description: locationProvider
@@ -8309,7 +8171,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete instance<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete location instance</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Approved Location</li></ul></div>"
+      description: "<div>Delete instance<div class='user-action'>User Action:<li>Delete location instance</li></div><div class='security-permissions'>Security Permission: <li>Delete Approved Location</li></div></div>"
       operationId: deleteLocationDatacenter
       parameters:
         - description: locationProvider
@@ -8357,7 +8219,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete instance<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete location instance</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Approved Location</li></ul></div>"
+      description: "<div>Delete instance<div class='user-action'>User Action:<li>Delete location instance</li></div><div class='security-permissions'>Security Permission: <li>Delete Approved Location</li></div></div>"
       operationId: deleteLocationFolder
       parameters:
         - description: locationProvider
@@ -8405,7 +8267,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete instance<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete location instance</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Approved Location</li></ul></div>"
+      description: "<div>Delete instance<div class='user-action'>User Action:<li>Delete location instance</li></div><div class='security-permissions'>Security Permission: <li>Delete Approved Location</li></div></div>"
       operationId: deleteLocationHost
       parameters:
         - description: locationProvider
@@ -8453,7 +8315,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete instance<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete location instance</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Approved Location</li></ul></div>"
+      description: "<div>Delete instance<div class='user-action'>User Action:<li>Delete location instance</li></div><div class='security-permissions'>Security Permission: <li>Delete Approved Location</li></div></div>"
       operationId: deleteLocationRegion
       parameters:
         - description: locationProvider
@@ -8501,7 +8363,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get cloud providers list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Providers</li><li>Add Provider</li><li>Delete Provider</li><li>Modify Provider</li><li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></ul></div>"
+      description: "<div>Get cloud providers list<div class='security-permissions'>Security Permissions:<li>View Providers</li><li>Add Provider</li><li>Delete Provider</li><li>Modify Provider</li><li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></div></div>"
       operationId: getProviders
       produces:
         - '*/*'
@@ -8537,7 +8399,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Create new cloud provider<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Create cloud provider</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add Provider</li></ul></div>"
+      description: "Create new cloud provider<div class='user-action'>Security Permission: <ul class='permissions-list'><li>Add Provider</li></ul></div>"
       operationId: createProvider
       parameters:
         - description: providerConfig
@@ -8615,7 +8477,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete cloud provider<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete cloud provider</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Provider</li></ul></div>"
+      description: "Delete cloud provider<div class='user-action'>User Action:Delete cloud provider</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete Provider</li></ul></div>"
       operationId: deleteProvider
       parameters:
         - description: locationProvider
@@ -8652,7 +8514,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get cloud provider<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Providers</li><li>Add Provider</li><li>Delete Provider</li><li>Modify Provider</li><li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></ul></div>"
+      description: "<div>Get cloud provider<div class='security-permissions'>Security Permissions: <li>View Providers</li><li>Add Provider</li><li>Delete Provider</li><li>Modify Provider</li><li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></div></div>"
       operationId: getProvider
       parameters:
         - description: locationProvider
@@ -8691,7 +8553,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Modify cloud provider<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify cloud provider</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Provider</li></ul></div>"
+      description: "Modify cloud provider<div class='user-action'>User Action: Modify cloud provider</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Modify Provider</li></ul></div>"
       operationId: modifyProvider
       parameters:
         - description: locationProvider
@@ -8735,8 +8597,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get licensed hosts list<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></ul></div>"
-      operationId: getSocketLocationsHosts
+      description: "<div>Get licensed hosts list<div class='security-permissions'>Security Permissions:<li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></div></div>"
+      operationId: getSocketLocationsList
       produces:
         - '*/*'
       responses:
@@ -8771,7 +8633,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add licensed host<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add licensed host</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add Licensed Host</li></ul></div>"
+      description: "Add licensed host<div class='user-action'>User Action: Add licensed host</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Add Licensed Host</li></ul></div>"
       operationId: createSocketLocation
       parameters:
         - description: licensedHost
@@ -8810,7 +8672,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete licensed host<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete licensed host</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Licensed Host</li></ul></div>"
+      description: "Delete licensed host<div class='user-action'>User Action: Delete licensed host</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete Licensed Host</li></ul></div>"
       operationId: deleteSocketLocation
       parameters:
         - description: provider
@@ -8852,7 +8714,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get licensed host<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></ul></div>"
+      description: "<div>Get licensed host<div class='security-permissions'>Security Permissions: <li>View Licensed Hosts</li><li>Add Licensed Host</li><li>Delete Licensed Host</li></div></div>"
       operationId: getSocketLocations
       parameters:
         - description: provider
@@ -8897,7 +8759,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Gets state of the vault<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Vault Mode</li><li>Set Vault Unlock Passcodes</li><li>Change Vault Mode</li><li>Unlock Vault</li></ul></div>"
+      description: "<div>Gets state of the vault<div class='security-permissions'>Security Permissions:<li>View Vault Mode</li><li>Set Vault Unlock Passcodes</li><li>Change Vault Mode</li><li>Unlock Vault</li></div></div>"
       operationId: getState
       produces:
         - '*/*'
@@ -8931,7 +8793,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set vault passcodes<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Set Vault passcodes</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Set Vault Unlock Passcodes</li></ul></div>"
+      description: "<div>Set vault passcodes<div class='user-action'>User Action:<li>Set Vault passcodes</li></div><div class='security-permissions'>Security Permission: <li>Set Vault Unlock Passcodes</li></div></div>"
       operationId: setCodes
       parameters:
         - description: codes
@@ -8970,7 +8832,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set vault mode<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Set Vault mode</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Vault Mode</li></ul></div>"
+      description: "<div>Set vault mode<div class='user-action'>User Action:<li>Set Vault mode</li></div><div class='security-permissions'>Security Permission: <li>Change Vault Mode</li></div></div>"
       operationId: setMode
       parameters:
         - description: mode
@@ -9009,7 +8871,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Validate passcode<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Validate passcode</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Validate passcode</li></ul></div>"
+      description: "<div>Validate passcode<div class='user-action'>User Action:<li>Validate passcode</li></div><div class='security-permissions'>Security Permission: <li>Validate passcode</li></div></div>"
       operationId: validatePasscode
       parameters:
         - description: code
@@ -9048,8 +8910,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Unlock vault<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Unlock Vault</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Unlock Vault</li></ul></div>"
-      operationId: unlockVault
+      description: "<div>Unlock vault<div class='user-action'>User Action:<li>Unlock Vault</li></div><div class='security-permissions'>Security Permission:<li>Unlock Vault</li></div></div>"
+      operationId: unlock
       parameters:
         - description: code
           in: body
@@ -9087,7 +8949,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of actions<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Actions</li></ul></div>"
+      description: "<div>Get list of actions<div class='security-permissions'>Security Permission: <li>View Actions</li></div></div>"
       operationId: getActions
       parameters:
         - description: 'time interval, min'
@@ -9153,7 +9015,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of active alarms<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Alarms</li></ul></div>"
+      description: "<div>Get list of active alarms<div class='security-permissions'>Security Permission: <li>View Alarms</li></div></div>"
       operationId: getAlarms
       parameters:
         - description: include disabled alarms
@@ -9285,7 +9147,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get configuration of alarms<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View System Configuration</li><li>Change System Configuration</li></ul></div>"
+      description: "<div>Get configuration of alarms<div class='security-permissions'>Security Permissions: <li>View System Configuration</li><li>Change System Configuration</li></div></div>"
       operationId: getAlarmsConfiguration
       produces:
         - '*/*'
@@ -9322,7 +9184,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set alarm configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change alarm configuration</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      description: "<div>Set alarm configuration<div class='user-action'>User Action:<li>Change alarm configuration</li></div><div class='security-permissions'>Security Permission: <li>Change System Configuration</li></div></div>"
       operationId: setAlarmConfiguration
       parameters:
         - description: alarmId
@@ -9438,7 +9300,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get diagnostics state<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Logs</li></ul></div>"
+      description: "<div>Get diagnostics state<div class='security-permissions'>Security Permission: <li>View Server Logs</li></div></div>"
       operationId: getDiagnosticsState
       produces:
         - '*/*'
@@ -9471,7 +9333,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Generate diagnostics<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Initiate diagnostics generation</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Logs</li></ul></div>"
+      description: "Generate diagnostics<div class='user-action'>User Action: Initiate diagnostics generation</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>View Server Logs</li></ul></div>"
       operationId: generateDiagnostics
       produces:
         - '*/*'
@@ -9503,7 +9365,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of events<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Events</li></ul></div>"
+      description: "<div>Get list of events<div class='security-permissions'>Security Permission: <li>View Events</li></div></div>"
       operationId: getEvents
       parameters:
         - description: 'time interval, min'
@@ -9573,7 +9435,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of log filenames<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Logs</li></ul></div>"
+      description: "<div>Get list of log filenames<div class='security-permissions'>Security Permission: <li>View Server Logs</li></div></div>"
       operationId: getLogInfo
       produces:
         - '*/*'
@@ -9608,7 +9470,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get log file contents<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Logs</li></ul></div>"
+      description: "<div>Get log file contents<div class='security-permissions'>Security Permission: <li>View Server Logs</li></div></div>"
       operationId: getLog
       parameters:
         - description: logName
@@ -9654,7 +9516,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Download all logs as single archive<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Download logs</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Logs</li></ul></div>"
+      description: "<div>Download all logs as single archive<div class='user-action'>User Action:<li>Download logs</li></div><div class='security-permissions'>Security Permission:<li>View Server Logs</li></div></div>"
       operationId: getLogs
       produces:
         - '*/*'
@@ -9686,7 +9548,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of security events<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Security Events</li></ul></div>"
+      description: "<div>Get list of security events<div class='security-permissions'>Security Permission: <li>View Security Events</li></div></div>"
       operationId: getSecurityEvents
       parameters:
         - description: 'time interval, min'
@@ -9756,7 +9618,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get monitoring target info<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Actions</li><li>View Events</li><li>View Security Events</li><li>View Alarms</li></ul></div>"
+      description: "<div>Get monitoring target info<div class='security-permissions'>Security Permissions:<li>View Actions</li><li>View Events</li><li>View Security Events</li><li>View Alarms</li></div></div>"
       operationId: getTargetInfo
       parameters:
         - description: targetId
@@ -9796,7 +9658,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get system parameters (total RAM, CPUs etc.)<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Performance</li></ul></div>"
+      description: "<div>Get system parameters (total RAM, CPUs etc.)<div class='security-permissions'>Security Permission: <li>View Server Performance</li></div></div>"
       operationId: getCommon
       produces:
         - '*/*'
@@ -9830,7 +9692,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get current system usage<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Performance</li></ul></div>"
+      description: "<div>Get current system usage<div class='security-permissions'>Security Permission:<li>View Server Performance</li></div></div>"
       operationId: getCurrent
       produces:
         - '*/*'
@@ -9864,7 +9726,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of roles<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Roles</li><li>Add Role</li><li>Delete Role</li><li>Modify Role</li><li>Add User</li><li>Change Role Administration</li></ul></div>"
+      description: "<div>Get list of roles<div class='security-permissions'>Security Permissions: <li>View Roles</li><li>Add Role</li><li>Delete Role</li><li>Modify Role</li><li>Add User</li><li>Change Role Administration</li></div></div>"
       operationId: getRolesList
       produces:
         - '*/*'
@@ -9900,7 +9762,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add new role<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add new role</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add Role</li></ul></div>"
+      description: "Add new role<div class='user-action'>User Action:Add new role</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Add Role</li></ul></div>"
       operationId: createRole
       parameters:
         - description: view
@@ -9939,7 +9801,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of role's permissions<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Roles</li><li>Add Role</li><li>Delete Role</li><li>Modify Role</li><li>Change Role Administration</li></ul></div>"
+      description: "<div>Get list of role's permissions<div class='security-permissions'>Security Permissions:<li>View Roles</li><li>Add Role</li><li>Delete Role</li><li>Modify Role</li><li>Change Role Administration</li></div></div>"
       operationId: getPermissions
       produces:
         - '*/*'
@@ -9974,7 +9836,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete role<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete role</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Role</li></ul></div>"
+      description: "Delete role<div class='user-action'>User Action:Delete role</div><div class='security-permissions'>Security Permission:<ul class='permissions-list'><li>Delete Role</li></ul></div>"
       operationId: deleteRole
       parameters:
         - description: role
@@ -10011,7 +9873,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get role<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Roles</li><li>Add Role</li><li>Delete Role</li><li>Modify Role</li><li>Add User</li><li>Change Role Administration</li></ul></div>"
+      description: "<div>Get role<div class='security-permissions'>Security Permissions: <li>View Roles</li><li>Add Role</li><li>Delete Role</li><li>Modify Role</li><li>Add User</li><li>Change Role Administration</li></div></div>"
       operationId: getRoles
       parameters:
         - description: role
@@ -10050,7 +9912,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Modify role<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify role</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Role</li></ul></div>"
+      description: "Modify role<div class='user-action'>User Action:Modify role</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Modify Role</li></ul></div>"
       operationId: modifyRole
       parameters:
         - description: role
@@ -10094,7 +9956,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change managing roles for a role<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change managing roles of a role</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Role Administration</li></ul></div>"
+      description: "<div>Change managing roles for a role<div class='user-action'>User Action: <li>Change managing roles of a role</li></div><div class='security-permissions'>Security Permission: <li>Change Role Administration</li></div>"
       operationId: changeManagingRoles
       parameters:
         - description: role
@@ -10139,7 +10001,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get RSA Authentication Manager configuration<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View System Configuration</li><li>Change System Configuration</li></ul></div>"
+      description: "<div>Get RSA Authentication Manager configuration<div class='security-permissions'>Security Permissions: <li>View System Configuration</li><li>Change System Configuration</li></div></div>"
       operationId: getConfig
       produces:
         - '*/*'
@@ -10172,8 +10034,8 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Upload Authentication Manager configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Upload RSA Authentication Manager configuration</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
-      operationId: upload
+      description: "Upload Authentication Manager configuration<div class='user-action'>User Action: Upload RSA Authentication Manager configuration</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      operationId: uploadAuthenticationManagerConfig
       parameters:
         - description: sdConfFile
           in: formData
@@ -10210,8 +10072,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of Machines<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Machines</li><li>Remove Machine</li><li>Control Machine Boot</li><li>Change VM Encryption Policy</li><li>Change Machine Encryption</li><li>Change Machine Keys</li><li>Shred Machine</li></ul></div>"
-      operationId: getListMachines
+      description: "<div>Get list of Machines<div class='security-permissions'>Security Permissions: <li>View Machines</li><li>Remove Machine</li><li>Control Machine Boot</li><li>Change VM Encryption Policy</li><li>Change Machine Encryption</li><li>Change Machine Keys</li><li>Shred Machine</li></div></div>"
+      operationId: get
       parameters:
         - description: pending_only
           in: query
@@ -10258,7 +10120,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of groups<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Groups</li><li>Add Group</li><li>Modify Group</li><li>Delete Group</li></ul></div>"
+      description: "<div>Get list of groups<div class='security-permissions'>Security Permissions: <li>View Groups</li><li>Add Group</li><li>Modify Group</li><li>Delete Group</li></div></div>"
       operationId: getGroups
       produces:
         - '*/*'
@@ -10294,7 +10156,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add new group<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add group</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add Group</li></ul></div>"
+      description: "Add new group<div class='user-action'>User Action:Add group</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Add Group</li></ul></div>"
       operationId: createGroup
       parameters:
         - description: groupModel
@@ -10333,7 +10195,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete group<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete group</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Group</li></ul></div>"
+      description: "Delete group<div class='user-action'>User Action:Delete group</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete Group</li></ul></div>"
       operationId: deleteGroup
       parameters:
         - description: group
@@ -10370,7 +10232,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get group<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Groups</li><li>Add Group</li><li>Modify Group</li><li>Delete Group</li></ul></div>"
+      description: "<div>Get group<div class='security-permissions'>Security Permissions: <li>View Groups</li><li>Add Group</li><li>Modify Group</li><li>Delete Group</li></div></div>"
       operationId: getGroup
       parameters:
         - description: group
@@ -10409,7 +10271,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Modify group<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify group</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Group</li></ul></div>"
+      description: "Modify group<div class='user-action'>User Action: Modify group</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Modify Group</li></ul></div>"
       operationId: modifyGroup
       parameters:
         - description: group
@@ -10453,7 +10315,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Generate and set new group code<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Generate new group code</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Group</li></ul></div>"
+      description: "<div>Generate and set new group code<div class='user-action'>User Action: <li>Generate new group code</li></div><div class='security-permissions'>Security Permission: <li>Modify Group</li></div></div>"
       operationId: newGroupCode
       parameters:
         - description: group
@@ -10575,7 +10437,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Reset license usage<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Reset license usage for group</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Reset Machines Usage</li></ul></div>"
+      description: "<div>Reset license usage<div class='user-action'>User Action: <li>Reset license usage for group</li></div><div class='security-permissions'>Security Permission: <li>Reset Machines Usage</li></div></div>"
       operationId: resetGroupUsage
       parameters:
         - description: group
@@ -10656,7 +10518,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of approved networks<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Approved Networks</li><li>Add Approved Network</li><li>Modify Approved Network</li><li>Delete Approved Network</li></ul></div>"
+      description: "<div>Get list of approved networks<div class='security-permissions'>Security Permissions: <li>View Approved Networks</li><li>Add Approved Network</li><li>Modify Approved Network</li><li>Delete Approved Network</li</div></div>"
       operationId: getApprovedNetworks
       produces:
         - '*/*'
@@ -10692,7 +10554,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add new approved network<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add approved network</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add Approved Network</li></ul></div>"
+      description: "Add new approved network<div class='user-action'> User Action: Add approved network</div><div class='security-permissions'> Security Permission: <ul class='permissions-list'><li>Add Approved Network</li></ul></div>"
       operationId: addApprovedNetwork
       parameters:
         - description: network
@@ -10731,7 +10593,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete approved network<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete approved network</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete Approved Network</li></ul></div>"
+      description: "Delete approved network<div class='user-action'>User Action: Delete approved network</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Delete Approved Network</li></ul></div>"
       operationId: removeApprovedNetwork
       parameters:
         - description: network
@@ -10768,7 +10630,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Modify approved network<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify approved network</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Approved Network</li></ul></div>"
+      description: "<div>Modify approved network<div class='user-action'>User Action:<li>Modify approved network</li></div><div class='security-permissions'>Security Permission: <li>Modify Approved Network</li></ul></div></div>"
       operationId: modifyApprovedNetwork
       parameters:
         - description: network
@@ -10812,7 +10674,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add IP address to approved network<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add IP address to approved network</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Approved Network</li></ul></div>"
+      description: "<div>Add IP address to approved network<div class='user-action'>User Action:<li>Add IP address to approved network</li></div><div class='security-permissions'>Security Permission: <li>Modify Approved Network</li></div></div>"
       operationId: addIpToNetwork
       parameters:
         - description: network
@@ -10856,7 +10718,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete IP address from approved network<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete IP address from approved network</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Approved Network</li></ul></div>"
+      description: "Delete IP address from approved network<div class='user-action'>User Action: Delete IP address from approved network</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Modify Approved Network</li></ul></div>"
       operationId: deleteIpFromNetwork
       parameters:
         - description: network
@@ -10893,7 +10755,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change IP address in approved network<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Modify IP address in approved network</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Modify Approved Network</li></ul></div>"
+      description: "<div>Change IP address in approved network<div class='user-action'>User Action:<li>Modify IP address in approved network</li></div><div class='security-permissions'>Security Permission:<li>Modify Approved Network</li></div></div>"
       operationId: modifyIpInNetwork
       parameters:
         - description: network
@@ -10937,7 +10799,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Remove machine<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Remove machine</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Remove Machine</li></ul></div>"
+      description: "Remove machine<div class='user-action'>User Action: Remove machine</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Remove Machine</li></ul></div>"
       operationId: remove
       parameters:
         - description: vm
@@ -10974,7 +10836,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get information<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Machines</li><li>Remove Machine</li><li>Control Machine Boot</li><li>Change VM Encryption Policy</li><li>Change Machine Encryption</li><li>Change Machine Keys</li><li>Shred Machine</li></ul></div>"
+      description: "<div>Get information<div class='security-permissions'>Security Permissions: <li>View Machines</li><li>Remove Machine</li><li>Control Machine Boot</li><li>Change VM Encryption Policy</li><li>Change Machine Encryption</li><li>Change Machine Keys</li><li>Shred Machine</li></div></div>"
       operationId: getVm
       parameters:
         - description: uuid
@@ -11014,7 +10876,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Block/Unblock machine<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Block machine</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Control Machine Boot</li></ul></div>"
+      description: "<div>Block/Unblock machine<div class='user-action'>User Action:<li>Block machine</li></div><div class='security-permissions'>Security Permission:<li>Control Machine Boot</li></div></div>"
       operationId: block
       parameters:
         - description: vm
@@ -11058,7 +10920,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Reset Machine Certificate<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Reset Machine Certificate</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Control Machine Boot</li></ul></div>"
+      description: "<div>Reset Machine Certificate<div class='user-action'>User Action:<li>Reset Machine Certificate</li></div><div class='security-permissions'>Security Permission:<li>Control Machine Boot</li></div></div>"
       operationId: resetVMCert
       parameters:
         - description: vm
@@ -11097,7 +10959,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Encrypt/Decrypt volume<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Machine volume/drive encryption</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Machine Encryption</li></ul></div>"
+      description: "<div>Encrypt/Decrypt volume<div class='user-action'>User Action:<li>Machine volume/drive encryption</li></div><div class='security-permissions'>Security Permission:<li>Change Machine Encryption</li></div></div>"
       operationId: encrypt
       parameters:
         - description: vm
@@ -11141,7 +11003,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get key file<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Download machine keys</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Download Machine Keys</li></ul></div>"
+      description: "<div>Get key file<div class='user-action'>User Action:<li>Download machine keys</li></div><div class='security-permissions'>Security Permission: <li>Download Machine Keys</li></div></div>"
       operationId: getVmKeyFile
       parameters:
         - description: vm
@@ -11192,7 +11054,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get key history<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Machines</li></ul></div>"
+      description: "<div>Get key history<div class='security-permissions'>Security Permission: <li>View Machines</li></div></div>"
       operationId: getVmKeyHistory
       parameters:
         - description: vm
@@ -11235,7 +11097,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Accept pending machine<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Resolve machine pending</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Control Machine Boot</li></ul></div>"
+      description: "<div>Accept pending machine<div class='user-action'>User Action:<li>Resolve machine pending</li></div><div class='security-permissions'>Security Permission:<li>Control Machine Boot</li></div></div>"
       operationId: accept
       parameters:
         - description: uuid
@@ -11279,7 +11141,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Machine keys update<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Initiate machine keys update</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Machine Keys</li></ul></div>"
+      description: "<div>Machine keys update<div class='user-action'>User Action:<li>Initiate machine keys update</li></div><div class='security-permissions'>Security Permission: <li>Change Machine Keys</li></div></div>"
       operationId: rollover
       parameters:
         - description: vm
@@ -11317,7 +11179,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Move machine to another group<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Move machine to another group</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Move Machine</li></ul></div>"
+      description: "<div>Move machine to another group<div class='user-action'>User Action:<li>Move machine to another group</li></div><div class='security-permissions'>Security Permission:<li>Move Machine</li></div></div>"
       operationId: moveVm
       parameters:
         - description: vm
@@ -11361,7 +11223,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete encryption policy exempt for volume<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete encryption policy exempt for volume</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change VM Encryption Policy</li></ul></div>"
+      description: "Delete encryption policy exempt for volume<div class='user-action'>User Action:Delete encryption policy exempt for volume</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change VM Encryption Policy</li></ul></div>"
       operationId: removeExempt
       parameters:
         - description: vm
@@ -11398,7 +11260,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Exempt volume from encryption policy<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Exempt volume from encryption policy</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change VM Encryption Policy</li></ul></div>"
+      description: "<div>Exempt volume from encryption policy<div class='user-action'>User Action:<li>Exempt volume from encryption policy</li></div><div class='security-permissions'>Security Permission: <li>Change VM Encryption Policy</li></div></div>"
       operationId: addExempt
       parameters:
         - description: vm
@@ -11436,7 +11298,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Shred machine<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Shred machine</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Shred Machine</li></ul></div>"
+      description: "<div>Shred machine<div class='user-action'>User Action:<li>Shred machine</li></div><div class='security-permissions'>Security Permission: <li>Shred Machine</li></div></div>"
       operationId: shred
       parameters:
         - description: vm
@@ -11474,7 +11336,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Upgrade machine<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Upgrade machine</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Control Machine Boot</li></ul></div>"
+      description: "<div>Upgrade machine<div class='user-action'>User Action:<li>Upgrade machine</li></div><div class='security-permissions'>Security Permission: <li>Control Machine Boot</li></div></div>"
       operationId: upgradeVm
       parameters:
         - description: vm
@@ -11545,7 +11407,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change server configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change server configuration</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Change server configuration<div class='user-action'>User Action: Change server configuration</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: setServerConfig
       parameters:
         - description: config
@@ -11584,7 +11446,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "upgrade Agure agent on server<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>upgrade Azure agent on server</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>upgrade Agure agent on server<div class='user-action'>User Action:<li>upgrade Azure agent on server</li></div><div class='security-permissions'>Security Permission: <li>Change Server Specific Configuration</li></div></div>"
       operationId: azureAgentInstall
       produces:
         - '*/*'
@@ -11649,7 +11511,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set console user password<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Set console cloudlink password</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Set console user password<div class='user-action'>User Action:Set console cloudlink password</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: setShadowPassword
       parameters:
         - description: shadowPassword
@@ -11688,7 +11550,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "get status for dist_upgrade<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>get status for dist_upgrade</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
+      description: "<div>get status for dist_upgrade<div class='user-action'>User Action:<li>get status for dist_upgrade</li></div><div class='security-permissions'>Security Permission:<li>View Server Specific Configuration</li></div></div>"
       operationId: getAptDistUpgradeLogs
       produces:
         - '*/*'
@@ -11721,7 +11583,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "apt-get update & dist-upgrade<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>upgrade packages on server</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "apt-get update & dist-upgrade<div class='user-action'>User Action:upgrade packages on server</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: aptDistUpgrade
       produces:
         - '*/*'
@@ -11790,7 +11652,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get number of failed login attempts before user lock<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View System Configuration</li><li>Change System Configuration</li></ul></div>"
+      description: "<div>Get number of failed login attempts before user lock<div class='security-permissions'>Security Permissions: <li>View System Configuration</li><li>Change System Configuration</li></div></div>"
       operationId: getLockAttempts
       produces:
         - '*/*'
@@ -11823,7 +11685,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change number of failed login attempts before user lock<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Number of failed login attempts changed</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      description: "Change number of failed login attempts before user lock<div class='user-action'>User Action:Number of failed login attempts changed</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
       operationId: setLockAttempts
       parameters:
         - description: count
@@ -11862,7 +11724,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get current max session timeout<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View System Configuration</li><li>Change System Configuration</li></ul></div>"
+      description: "<div>Get current max session timeout<div class='security-permissions'> Permissions: <li>View System Configuration</li><li>Change System Configuration</li></div></div>"
       operationId: getMaxSessionTimeout
       produces:
         - '*/*'
@@ -11895,7 +11757,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change max session session timeout<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change max session timeout</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      description: "Change max session session timeout<div class='user-action'>User Action:Change max session timeout</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
       operationId: setMaxSessionTimeout
       parameters:
         - description: timeout
@@ -11934,7 +11796,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get current ui session timeout<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View System Configuration</li><li>Change System Configuration</li></ul></div>"
+      description: "<div>Get current ui session timeout<div class='security-permissions'>Security Permissions: <li>View System Configuration</li><li>Change System Configuration</li></div></div>"
       operationId: getUiTimeout
       produces:
         - '*/*'
@@ -11967,7 +11829,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change ui session timeout<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change UI session timeout</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
+      description: "Change ui session timeout<div class='user-action'>User Action:Change UI session timeout</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change System Configuration</li></ul></div>"
       operationId: setUiTimeout
       parameters:
         - description: timeout
@@ -12006,8 +11868,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of user sessions<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View User Sessions</li><li>Terminate User Session</li></ul></div>"
-      operationId: getUsersSessionsList
+      description: "<div>Get list of user sessions<div class='security-permissions'>Security Permissions: <li>View User Sessions</li><li>Terminate User Session</li></div></div>"
+      operationId: getUsersSessions
       produces:
         - '*/*'
       responses:
@@ -12076,7 +11938,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Enable debug for current session<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Enable debug for current session</span></div>"
+      description: "Enable debug for current session<div class='user-action'>User Action:Enable debug for current session</div>"
       operationId: putDebugEnabler
       parameters:
         - description: enabled
@@ -12115,7 +11977,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Terminate user session<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Terminate user session</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Terminate User Session</li></ul></div>"
+      description: "Terminate user session<div class='user-action'>User Action:Terminate user session</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Terminate User Session</li></ul></div>"
       operationId: delUserSession
       parameters:
         - description: usersession_id
@@ -12152,8 +12014,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get user session<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View User Sessions</li><li>Terminate User Session</li></ul></div>"
-      operationId: getUsersSessions
+      description: "<div>Get user session<div class='security-permissions'>Security Permissions: <li>View User Sessions</li><li>Terminate User Session</li></div></div>"
+      operationId: getUsersSessionsInfo
       parameters:
         - description: usersession_id
           in: path
@@ -12192,7 +12054,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get SNMP target<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
+      description: "<div>Get SNMP target<div class='security-permissions'>Security Permission: <li>View Server Specific Configuration</li></ul></div></div>"
       operationId: getTarget
       produces:
         - '*/*'
@@ -12225,7 +12087,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Configure SNMP target<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Configure SNMP target</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Configure SNMP target<div class='user-action'>User Action:Configure SNMP target</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: configTarget
       parameters:
         - description: restTarget
@@ -12264,7 +12126,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Send test SNMP trap<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Send SNMP test trap</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li></ul></div>"
+      description: "<div>Send test SNMP trap<div class='user-action'>User Action:  Send SNMP test trap</div><div class='security-permissions'>Security Permission:<li>View Server Specific Configuration</li></div></div>"
       operationId: sendTestSnmpTrap
       produces:
         - '*/*'
@@ -12296,8 +12158,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Gets syslog configuration<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Syslog Configuration</li><li>Change Syslog Configuration</li></ul></div>"
-      operationId: getSyslog
+      description: "<div>Gets syslog configuration<div class='security-permissions'>Security Permissions: <li>View Syslog Configuration</li><li>Change Syslog Configuration</li></div></div>"
+      operationId: getSyslogConfig
       produces:
         - '*/*'
       responses:
@@ -12329,7 +12191,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change Syslog configuration<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change Syslog configuration</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Syslog Configuration</li></ul></div>"
+      description: "Change Syslog configuration<div class='user-action'>User Action:Change Syslog configuration</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Syslog Configuration</li></ul></div>"
       operationId: set
       parameters:
         - description: config
@@ -12368,7 +12230,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of all Syslog facilities<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Syslog Configuration</li><li>Change Syslog Configuration</li></ul></div>"
+      description: "<div>Get list of all Syslog formats<div class='security-permissions'>Security Permissions:<li>View Syslog Configuration</li><li>Change Syslog Configuration</li></div></div>"
       operationId: getFacilities
       produces:
         - '*/*'
@@ -12403,7 +12265,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get list of all Syslog formats<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Syslog Configuration</li><li>Change Syslog Configuration</li></ul></div>"
+      description: "<div>Get list of all Syslog formats<div class='security-permissions'>Security Permissions:<li>View Syslog Configuration</li><li>Change Syslog Configuration</li></div></div>"
       operationId: getFormats
       produces:
         - '*/*'
@@ -12438,7 +12300,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Set syslog entry format string<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Set syslog entry format</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Syslog Configuration</li></ul></div>"
+      description: "<div>Set syslog entry format string<div class='user-action'>User Action:<li>Set syslog entry format</li></div><div class='security-permissions'>Security Permission:<li>Change Syslog Configuration</li></div></div>"
       operationId: setSyslogEntry
       parameters:
         - description: config
@@ -12477,7 +12339,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Gets system time<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Gets system time<div class='security-permissions'>Security Permissions: <li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></div></div>"
       operationId: getSystemTime
       produces:
         - '*/*'
@@ -12511,7 +12373,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "List ntp servers<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>List ntp servers<div class='security-permissions'>Security Permissions: <li>View Server Specific Configuration</li><li>Change Server Specific Configuration</li></div></div>"
       operationId: listNtpServers
       produces:
         - '*/*'
@@ -12547,7 +12409,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add ntp server<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add NTP server</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "Add ntp server<div class='user-action'>User Action: Add NTP server</span></div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
       operationId: addNtpServer
       parameters:
         - description: view
@@ -12586,7 +12448,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete ntp server<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete NTP server</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Delete ntp server<div class='user-action'>User Action:<li>Delete NTP server</li></div><div class='security-permissions'>Security Permission:<li>Change Server Specific Configuration</li></div></div>"
       operationId: deleteNtpServer
       parameters:
         - description: server
@@ -12624,7 +12486,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Sync with ntp server<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Sync with NTP server</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change Server Specific Configuration</li></ul></div>"
+      description: "<div>Sync with ntp server<div class='user-action'>User Action:<li>Sync with NTP server</li></div><div class='security-permissions'>Security Permission:<li>Change Server Specific Configuration</li></div></div></div>"
       operationId: syncWithNtpServer
       parameters:
         - description: server
@@ -12662,7 +12524,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Gets list of users<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Users</li><li>Add User</li><li>Delete User</li><li>Change User Roles</li><li>Change User Password</li><li>Change User Second Factor</li><li>Unlock User</li></ul></div>"
+      description: "<div>Gets list of users<div class='security-permissions'>Security Permissions: <li>View Users</li><li>Add User</li><li>Delete User</li><li>Change User Roles</li><li>Change User Password</li><li>Change User Second Factor</li><li>Unlock User</li></div></div>"
       operationId: list
       produces:
         - '*/*'
@@ -12698,7 +12560,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Add new user<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Add user</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Add User</li></ul></div>"
+      description: "Add new user<div class='user-action'>User Action:Add user</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Add User</li></ul></div>"
       operationId: create
       parameters:
         - description: newUser
@@ -12739,7 +12601,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change own password<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change own user password</span></div>"
+      description: "<div>Change own password<div class='user-action'>User Action:<li>Change own user password</li></div></div>"
       operationId: changeOwnPassword
       parameters:
         - description: userChangePassword
@@ -12778,7 +12640,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Delete user<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Delete user</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Delete User</li></ul></div>"
+      description: "Delete user<div class='user-action'>User Action:Delete user</div><div class='security-permissions'>Security Permission:<ul class='permissions-list'><li>Delete User</li></ul></div>"
       operationId: delete
       parameters:
         - description: user
@@ -12815,8 +12677,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get user information<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View Users</li><li>Add User</li><li>Delete User</li><li>Change User Roles</li><li>Change User Password</li><li>Change User Second Factor</li><li>Unlock User</li></ul></div>"
-      operationId: get
+      description: "<div>Get user information<div class='security-permissions'>Security Permissions: <li>View Users</li><li>Add User</li><li>Delete User</li><li>Change User Roles</li><li>Change User Password</li><li>Change User Second Factor</li><li>Unlock User</li></div></div>"
+      operationId: getUserInfo
       parameters:
         - description: user
           in: path
@@ -12855,8 +12717,8 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Unlock user<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Unlock user</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Unlock User</li></ul></div>"
-      operationId: unlock
+      description: "<div>Unlock user<div class='user-action'>User Action:<li>Unlock user</li></div><div class='security-permissions'>Security Permission: <li>Unlock User</li></div><div>"
+      operationId: unlockUser
       parameters:
         - description: user
           in: path
@@ -12893,7 +12755,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change user password<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change user password</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change User Password</li></ul></div>"
+      description: "<div>Change user password<div class='user-action'>User Action: <li>Change user password</li></div><div class='security-permissions'>Security Permission:<li>Change User Password</li></div></div>"
       operationId: changePassword
       parameters:
         - description: user
@@ -12937,7 +12799,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change roles of the user<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change user roles</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change User Roles</li></ul></div>"
+      description: "<div>Change roles of the user<div class='user-action'>User Action:<li>Change user roles</li></div><div class='security-permissions'>Security Permission:<li>Change User Roles</li></div></div?"
       operationId: changeRole
       parameters:
         - description: user
@@ -12982,7 +12844,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Change user two factor authentication<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Change user two factor authentication</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Change User Second Factor</li></ul></div>"
+      description: "<div>Change user two factor authentication<div class='user-action'>User Action: <li>Change user two factor authentication</li></div><div class='security-permissions'>Security Permission:<li>Change User Second Factor</li></div></div>"
       operationId: change2Fa
       parameters:
         - description: user
@@ -13028,7 +12890,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get versions<div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Update System</li></ul></div>"
+      description: "<div>Get versions<div class='security-permissions'>Security Permission:<li>Update System</li></div><div>"
       operationId: getAvailableVersion
       produces:
         - '*/*'
@@ -13061,7 +12923,7 @@ paths:
       consumes:
         - multipart/form-data
       deprecated: false
-      description: "Upload ISO<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Upload ISO</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Update System</li></ul></div>"
+      description: "Upload ISO<div class='user-action'>User Action:Upload ISO</div><div class='security-permissions'>Security Permission: <ul class='permissions-list'><li>Update System</li></ul></div>"
       operationId: uploadVersion
       parameters:
         - description: iso
@@ -13099,7 +12961,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Initiate system upgrade<div class='user-action'><span class='action-title'>User Action:</span> <span class='action-name'>Initiate upgrade</span></div><div class='security-permissions'><span class='permissions-title'>Security Permission:</span> <ul class='permissions-list'><li>Update System</li></ul></div>"
+      description: "<div>Initiate system upgrade<div class='user-action'>User Action: <li> Initiate upgrade</li></div><div class='security-permissions'>Security Permission: <li>Update System</li></div><div>"
       operationId: upgradeISO
       produces:
         - '*/*'
@@ -13130,7 +12992,7 @@ schemes:
   - http
 securityDefinitions:
   oauth2:
-    authorizationUrl: /cloudlink/oauth/authorize
+    authorizationUrl: 'https://localhost:8080/cloudlink/oauth/authorize'
     flow: implicit
     scopes:
       all: access all
