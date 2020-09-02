@@ -1665,7 +1665,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: "Get domain configuration<div class='security-permissions'><span class='permissions-title'>Security Permissions:</span> <ul class='permissions-list'><li>View System Configuration</li><li>Change System Configuration</li></ul></div>"
+      description: "<div>Get domain configuration<div class='security-permissions'>Security Permissions: <li>View System Configuration</li><li>Change System Configuration</li></div></div>"
       operationId: get
       produces:
         - '*/*'
