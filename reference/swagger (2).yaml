@@ -208,6 +208,7 @@ definitions:
         type: string
       subject:
         type: string
+  Chronology: {}
   ClusterJoin:
     properties:
       host:
@@ -403,6 +404,18 @@ definitions:
     properties:
       is_enabled:
         type: boolean
+  'Entry«string,KubernetesNodeAgent»':
+    properties:
+      key:
+        $ref: '#/definitions/KubernetesNodeAgent'
+  'Entry«string,KubernetesVolume»':
+    properties:
+      key:
+        $ref: '#/definitions/KubernetesVolume'
+  'Entry«string,string»':
+    properties:
+      key:
+        type: string
   Event:
     properties:
       action:
@@ -658,6 +671,24 @@ definitions:
         type: string
       version:
         type: string
+  KubernetesNode:
+    properties:
+      agents:
+        items:
+          $ref: '#/definitions/Entry«string,KubernetesNodeAgent»'
+        type: array
+      name:
+        type: string
+  KubernetesNodeAgent:
+    properties:
+      driver_type:
+        type: string
+      version:
+        type: string
+      volumes:
+        items:
+          $ref: '#/definitions/Entry«string,KubernetesVolume»'
+        type: array
   KubernetesNodeList:
     properties:
       nodes:
@@ -681,6 +712,42 @@ definitions:
       total_volumes:
         format: int32
         type: integer
+  KubernetesVolume:
+    properties:
+      attrs:
+        type: object
+      container_uuid:
+        format: uuid
+        type: string
+      id:
+        type: string
+      name:
+        type: string
+      status:
+        type: string
+      uid:
+        type: string
+  KubernetesVolumeModel:
+    properties:
+      attributes:
+        type: object
+      container_uuid:
+        format: uuid
+        type: string
+      driver_type:
+        type: string
+      name:
+        type: string
+      node_state:
+        items:
+          $ref: '#/definitions/Entry«string,string»'
+        type: array
+      state_consistent:
+        type: boolean
+      volume_id:
+        type: string
+      volume_uid:
+        type: string
   LdapSearchInput:
     properties:
       base_search:
