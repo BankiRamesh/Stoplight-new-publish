@@ -1490,12 +1490,12 @@ definitions:
         type: array
       user:
         type: string
-host: 'localhost:8080'
+host: 'localhost:8060'
 info:
   description: '<p>The REST API provides programmatic access to CloudLink Center.  The REST API identifies applications and users using OAuth; responses are available in JSON.</p><a href="/cloudlink/swaggerui/overview.html" style="font-size: large; font-weight: bold">Overview</a>'
   license:
     name: Ancillary Licence
-    url: 'https://localhost:8080/cloudlink/html/ancillary.htm'
+    url: 'https://localhost:8060/cloudlink/html/ancillary.htm'
   termsOfService: /cloudlink/html/license.htm
   title: CloudLink Center REST API
   version: '1.0'
@@ -3136,7 +3136,7 @@ paths:
       consumes:
         - application/json
       deprecated: false
-      description: 'Add allowed origin in form: http://127.0.0.1:8080'
+      description: 'Add allowed origin in form: https://127.0.0.1:8060'
       operationId: post
       parameters:
         - description: origin
@@ -12994,7 +12994,7 @@ schemes:
   - http
 securityDefinitions:
   oauth2:
-    authorizationUrl: 'https://localhost:8080/cloudlink/oauth/authorize'
+    authorizationUrl: 'http://localhost:8060/cloudlink/oauth/authorize'
     flow: implicit
     scopes:
       all: access all
