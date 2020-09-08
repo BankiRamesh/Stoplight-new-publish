@@ -1,3 +1,0 @@
-# Add-a-Machine-Group-and-Change-Group-Policy
-
-The beginning of an awesome article...

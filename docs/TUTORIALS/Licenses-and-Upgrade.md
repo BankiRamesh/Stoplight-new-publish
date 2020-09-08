@@ -1,3 +1,3 @@
-# Licenses-and-Upgrade
+# Licenses and Upgrade
 
 The beginning of an awesome article...

@@ -1,3 +1,3 @@
-# Introduction-to-REST-API
+# Introduction to REST API
 
 The beginning of an awesome article...

@@ -1,3 +1,3 @@
-# Authentication-and-Authorization
+# Authentication and Authorization
 
 The beginning of an awesome article...

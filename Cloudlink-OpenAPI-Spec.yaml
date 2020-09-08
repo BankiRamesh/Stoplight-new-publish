@@ -1497,7 +1497,7 @@ info:
     name: Ancillary Licence
     url: 'https://localhost:8060/cloudlink/html/ancillary.htm'
   termsOfService: /cloudlink/html/license.htm
-  title: CloudLink Center REST API
+  title: API REFERENCE
   version: '1.0'
 paths:
   /cloudlink/rest/ad:
