@@ -3,7 +3,8 @@ The REST API identifies the user using OAuth 2.0. Use the OAuth endpoints to ret
 
 The REST API requires that request bodies and responses be in JSON format.<br>
 
-###### **Authentication:<br>**
+###### Authentication and Authorization
+
 Authentication to the REST APIs is done using OAuth 2.0. CloudLink Center supports the following grant types: implicit and client credentials.<br>
 
 ###### Implicit Grant:
@@ -23,12 +24,13 @@ The access token is found in the response body which has the following JSON form
     "expires_in":7199,
     "scope":"all"
     }
-
-    Making Authenticated Requests
+<br>
+Making Authenticated Requests
 Once you have an access token, you can make requests to the API. Add the Authorization header to each request.
 
 Authorization: Bearer eb9d9cf7-bddd-45e7-8e31-ceecb98418e9
 <br>
 
-##### Creating a Client User:
+##### Creating a Client User: 
+<br>
 If using the client credentials grant type, a client user must be created in CloudLink Center. Login to CloudLink Center with a user with the Add User permission and navigate to Configuration, Users. Click Add and specify the Client for the User Type. The User Name is the client_id URL parameter the Password is the client_secret URL parameter in the POST request. A Client user can only login using client credentials grant type, interactive login is prevented.
