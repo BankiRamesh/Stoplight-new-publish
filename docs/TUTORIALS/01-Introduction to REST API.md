@@ -56,7 +56,8 @@ In the header of the request, the client sends the type of content that it is ab
 
 For example,
 
-    GET
+    GET https://%clc_address%/cloudlink/rest/securevm
+    Accept: application/json
 
 ### Response codes
 Responses from the server contain status codes to alert the client about the success of the operation. As a developer, you do not need to know every status code (there are many of them), but you should know the most common ones and how they are used:
@@ -79,3 +80,31 @@ Status Code |  Name| Meaning
  501 | NOT IMPLEMENTED | The specified service is not implemented.
 
 ### Example of request and response
+
+This example calls the Cloudlink users API. If you want to view all users, the request would look like this:
+
+    GET https://%clc_address%/cloudlink/rest/users
+    Accept: application/json
+
+A possible response header would look like this example:
+
+    Status Code: 200 (OK)
+    Content-type: application/json
+
+Followed by the users details list in JSON format:
+
+Response Body:
+
+    [
+      {
+        "name": "secadmin",
+        "roles": [
+        "SecAdmin"
+        ],
+        "built_in": true,
+        "user_type": "local",
+        "twofa_type": "none",
+        "locked": false,
+        "target_id": "005ee9135ce5e2e6015ce5e443610000"
+      }
+    ]
