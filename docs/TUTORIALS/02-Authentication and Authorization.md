@@ -1,4 +1,4 @@
-###### Authentication and Authorization
+# Authentication and Authorization
 
 The REST API identifies the user using OAuth 2.0. Use the OAuth endpoints to retrieve the access token required to use the main REST APIs. The OAuth scope will always be all.
 
