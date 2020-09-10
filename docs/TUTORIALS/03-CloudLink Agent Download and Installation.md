@@ -36,8 +36,8 @@ After downloading the CloudLink Agent installer package (the securevm-windows-x6
     [GROUPCODE=group_code]
 
 where, 
--  CLOUDLINKCENTER=clc_address specifies the CloudLink Center server address. For more information, see CloudLink Center server address. If you do not specify the CloudLink Center server address, the machine is not registered with CloudLink Center. No automatic encryption occurs after deployment. For information about specifying this address following deployment, see Add the CloudLink Center server address or group registration code after deployment.
--  GROUPCODE=group_code specifies the registration code for the machine group to which you want to assign the machine. If you do not specify a registration code, CloudLink Center assigns the machine to the Default machine group. For more information, see Manage CloudLink machines by grouping.
+-  CLOUDLINKCENTER=clc_address specifies the CloudLink Center server address.If you do not specify the CloudLink Center server address, the machine is not registered with CloudLink Center. No automatic encryption occurs after deployment. For information about specifying this address following deployment, see Add the CloudLink Center server address or group registration code after deployment.
+-  GROUPCODE=group_code specifies the registration code for the machine group to which you want to assign the machine. If you do not specify a registration code, CloudLink Center assigns the machine to the Default machine group.
 
 3. When the CloudLink Agent Setup Wizard is displayed, click Install.
 4. Click Finish.
